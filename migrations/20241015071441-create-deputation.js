@@ -2,8 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('petrol_allowances', {
-      petrol_allowance_id: {
+    await queryInterface.createTable('deputations', {
+      deputation_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -12,7 +12,16 @@ module.exports = {
       staff_id: {
         type: Sequelize.INTEGER
       },
-      allowance_date: {
+      deputation_code: {
+        type: Sequelize.STRING
+      },
+      deputation_date: {
+        type: Sequelize.DATE
+      },
+      from_date: {
+        type: Sequelize.DATE
+      },
+      to_date: {
         type: Sequelize.DATE
       },
       from_place: {
@@ -21,20 +30,11 @@ module.exports = {
       to_place: {
         type: Sequelize.STRING
       },
-      activity_id: {
+      reason: {
+        type: Sequelize.STRING
+      },
+      deputation_by: {
         type: Sequelize.INTEGER
-      },
-      total_km: {
-        type: Sequelize.INTEGER
-      },
-      amount: {
-        type: Sequelize.STRING
-      },
-      bill_no: {
-        type: Sequelize.STRING
-      },
-      bill_image_name: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +46,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('petrol_allowances');
+    await queryInterface.dropTable('deputations');
   }
 };

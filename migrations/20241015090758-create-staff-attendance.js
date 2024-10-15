@@ -2,24 +2,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('designation', {
-      designation_id: {
+    await queryInterface.createTable('staff_attendances', {
+      staff_attendance_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      department_id: {
+      attendance_date: {
+        type: Sequelize.DATE
+      },
+      attendance_status_id: {
         type: Sequelize.INTEGER
       },
-      designation_name: {
-        allowNull: false,
-        type: Sequelize.STRING,
+      staff_id: {
+        type: Sequelize.INTEGER
       },
-      is_active: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: 1
+      attendance_incharge_id: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +31,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('designation');
+    await queryInterface.dropTable('staff_attendances');
   }
 };

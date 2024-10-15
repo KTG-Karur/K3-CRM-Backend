@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     designation_name: DataTypes.STRING,
+    department_id: DataTypes.INTEGER,
     is_active: DataTypes.BOOLEAN
   }, {
     sequelize,

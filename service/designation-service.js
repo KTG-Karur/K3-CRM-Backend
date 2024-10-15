@@ -3,26 +3,38 @@
 const sequelize = require('../models/index').sequelize;
 const messages = require("../helpers/message");
 const _ = require('lodash');
+const { QueryTypes } = require('sequelize');
 
 async function getDesignation(query) {
   try {
-    let iql = {};
+    let iql = "";
+    let count = 0;
     if (query && Object.keys(query).length) {
+      iql += `WHERE`;
       if (query.designationId) {
-        iql.designation_id = query.designationId;
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` de.designation_id = ${query.designationId}`;
+      }
+      if (query.departmentId) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` de.department_id = ${query.departmentId}`;
       }
       if (query.isActive) {
-        iql.is_active = query.isActive;
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` de.is_active = ${query.isActive}`;
       }
     }
-    const result = await sequelize.models.designation.findAll({
-      attributes: [['designation_id', 'designationId'], ['designation_name', 'designationName'],
-      ['is_active', 'isActive'], ['createdAt', 'createdAt']],
-      where: iql,
-      order: [['designation_id', 'DESC']],
-      raw: true,
-      nest: false
-    });
+    const result = await sequelize.query(`SELECT de.designation_id "designationId", de.department_id "departmentId",d.department_name "departmentName",
+        de.designation_name "designationName", de.is_active "isActive", de.createdAt, de.updatedAt
+        FROM designation de
+        left join department d on d.department_id = de.department_id ${iql}`, {
+        type: QueryTypes.SELECT,
+        raw: true,
+        nest: false
+      });
     return result;
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
@@ -55,22 +67,8 @@ async function updateDesignation(designationId, putData) {
 }
 }
 
-async function deleteDesignation(designationId) {
-  try {
-    const designationResult = await sequelize.models.designation.destroy({ where: { designation_id: designationId } });
-    if(designationResult == 1){
-      return "Deleted Successfully...!";
-    }else{
-      return "Data Not Founded...!";
-    }
-} catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
-}
-
 module.exports = {
   getDesignation,
   updateDesignation,
-  createDesignation,
-  deleteDesignation
+  createDesignation
 };

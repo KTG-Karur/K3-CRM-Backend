@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class petrol_allowance extends Model {
+  class staff_known_language extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,24 +13,20 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  petrol_allowance.init({
-    petrol_allowance_id: {
+  staff_known_language.init({
+    staff_known_language_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
     staff_id: DataTypes.INTEGER,
-    allowance_date: DataTypes.DATE,
-    from_place: DataTypes.STRING,
-    to_place: DataTypes.STRING,
-    activity_id: DataTypes.INTEGER,
-    total_km: DataTypes.INTEGER,
-    amount: DataTypes.STRING,
-    bill_no: DataTypes.STRING,
-    bill_image_name: DataTypes.STRING
+    language_id: DataTypes.INTEGER,
+    speak: DataTypes.BOOLEAN,
+    read: DataTypes.BOOLEAN,
+    write: DataTypes.BOOLEAN
   }, {
     sequelize,
-    modelName: 'petrol_allowance',
+    modelName: 'staff_known_language',
   });
-  return petrol_allowance;
+  return staff_known_language;
 };

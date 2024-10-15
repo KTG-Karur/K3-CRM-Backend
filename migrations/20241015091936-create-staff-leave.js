@@ -2,8 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('petrol_allowances', {
-      petrol_allowance_id: {
+    await queryInterface.createTable('staff_leaves', {
+      staff_leave_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -12,29 +12,26 @@ module.exports = {
       staff_id: {
         type: Sequelize.INTEGER
       },
-      allowance_date: {
+      leave_type_id: {
+        type: Sequelize.INTEGER
+      },
+      leave_date: {
         type: Sequelize.DATE
       },
-      from_place: {
+      reason: {
         type: Sequelize.STRING
       },
-      to_place: {
-        type: Sequelize.STRING
+      from_date: {
+        type: Sequelize.DATE
       },
-      activity_id: {
+      to_date: {
+        type: Sequelize.DATE
+      },
+      approved_by: {
         type: Sequelize.INTEGER
       },
-      total_km: {
+      leave_status_id: {
         type: Sequelize.INTEGER
-      },
-      amount: {
-        type: Sequelize.STRING
-      },
-      bill_no: {
-        type: Sequelize.STRING
-      },
-      bill_image_name: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('petrol_allowances');
+    await queryInterface.dropTable('staff_leaves');
   }
 };

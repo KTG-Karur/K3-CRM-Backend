@@ -130,6 +130,72 @@ module.exports = {
         status_name: "SL"
       },
        //-----Ends------//
+      //-----Claim Status------//
+      {
+        status_category_id : 10,
+        status_name: "Requested"
+      },
+      {
+        status_category_id : 10,
+        status_name: "Approved"
+      },
+      {
+        status_category_id : 10,
+        status_name: "Cancelled"
+      },
+       //-----Ends------//
+      //-----Relation------//
+      {
+        status_category_id : 11,
+        status_name: "Father"
+      },
+      {
+        status_category_id : 11,
+        status_name: "Mother"
+      },
+      {
+        status_category_id : 11,
+        status_name: "Husband"
+      },
+      {
+        status_category_id : 11,
+        status_name: "Wife"
+      },
+      {
+        status_category_id : 11,
+        status_name: "Son"
+      },
+      {
+        status_category_id : 11,
+        status_name: "Daughter"
+      },
+       //-----Ends------//
+      {
+        status_category_id : 12,
+        status_name: "1hr"
+      },
+      {
+        status_category_id : 12,
+        status_name: "2hr"
+      },
+      {
+        status_category_id : 12,
+        status_name: "Half-Day"
+      },
+       //-----Ends------//
+      {
+        status_category_id : 13,
+        status_name: "Mr"
+      },
+      {
+        status_category_id : 13,
+        status_name: "Ms."
+      },
+      {
+        status_category_id : 13,
+        status_name: "Mrs."
+      },
+       //-----Ends------//
     ]);
   },
 

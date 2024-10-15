@@ -2,8 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('petrol_allowances', {
-      petrol_allowance_id: {
+    await queryInterface.createTable('staff_salary_histories', {
+      staff_salary_history_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -12,28 +12,25 @@ module.exports = {
       staff_id: {
         type: Sequelize.INTEGER
       },
-      allowance_date: {
+      salary_date: {
         type: Sequelize.DATE
       },
-      from_place: {
+      salary_amount: {
         type: Sequelize.STRING
       },
-      to_place: {
+      deduction_amount: {
         type: Sequelize.STRING
       },
-      activity_id: {
-        type: Sequelize.INTEGER
-      },
-      total_km: {
-        type: Sequelize.INTEGER
-      },
-      amount: {
+      esi_amount: {
         type: Sequelize.STRING
       },
-      bill_no: {
+      pf_amount: {
         type: Sequelize.STRING
       },
-      bill_image_name: {
+      incentive: {
+        type: Sequelize.STRING
+      },
+      total_salary_amount: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -46,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('petrol_allowances');
+    await queryInterface.dropTable('staff_salary_histories');
   }
 };

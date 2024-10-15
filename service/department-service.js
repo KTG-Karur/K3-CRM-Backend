@@ -55,22 +55,8 @@ async function updateDepartment(departmentId, putData) {
 }
 }
 
-async function deleteDepartment(departmentId) {
-  try {
-    const departmentResult = await sequelize.models.department.destroy({ where: { department_id: departmentId } });
-    if(departmentResult == 1){
-      return "Deleted Successfully...!";
-    }else{
-      return "Data Not Founded...!";
-    }
-} catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
-}
-
 module.exports = {
   getDepartment,
   updateDepartment,
   createDepartment,
-  deleteDepartment
 };

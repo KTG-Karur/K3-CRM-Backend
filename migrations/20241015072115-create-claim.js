@@ -2,39 +2,45 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('petrol_allowances', {
-      petrol_allowance_id: {
+    await queryInterface.createTable('claims', {
+      claim_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      staff_id: {
+      claim_type_id: {
         type: Sequelize.INTEGER
       },
-      allowance_date: {
+      requested_by: {
+        type: Sequelize.INTEGER
+      },
+      requested_amount: {
+        type: Sequelize.STRING
+      },
+      reason: {
+        type: Sequelize.STRING
+      },
+      branch_id: {
+        type: Sequelize.INTEGER
+      },
+      recepit_image_name: {
+        type: Sequelize.STRING
+      },
+      claim_amount: {
+        type: Sequelize.STRING
+      },
+      apply_date: {
         type: Sequelize.DATE
       },
-      from_place: {
-        type: Sequelize.STRING
-      },
-      to_place: {
-        type: Sequelize.STRING
-      },
-      activity_id: {
+      claim_status: {
         type: Sequelize.INTEGER
       },
-      total_km: {
+      mode_of_payment_id: {
         type: Sequelize.INTEGER
       },
-      amount: {
-        type: Sequelize.STRING
-      },
-      bill_no: {
-        type: Sequelize.STRING
-      },
-      bill_image_name: {
-        type: Sequelize.STRING
+      approved_date: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +52,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('petrol_allowances');
+    await queryInterface.dropTable('claims');
   }
 };

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class petrol_allowance extends Model {
+  class transfer_staff extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,24 +13,21 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  petrol_allowance.init({
-    petrol_allowance_id: {
+  transfer_staff.init({
+    transfer_staff_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
     staff_id: DataTypes.INTEGER,
-    allowance_date: DataTypes.DATE,
-    from_place: DataTypes.STRING,
-    to_place: DataTypes.STRING,
-    activity_id: DataTypes.INTEGER,
-    total_km: DataTypes.INTEGER,
-    amount: DataTypes.STRING,
-    bill_no: DataTypes.STRING,
-    bill_image_name: DataTypes.STRING
+    transfer_code: DataTypes.STRING,
+    transfer_date: DataTypes.DATE,
+    transfer_from: DataTypes.STRING,
+    transfer_to: DataTypes.STRING,
+    transfered_by: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'petrol_allowance',
+    modelName: 'transfer_staff',
   });
-  return petrol_allowance;
+  return transfer_staff;
 };

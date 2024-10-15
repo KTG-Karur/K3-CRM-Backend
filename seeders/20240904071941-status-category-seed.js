@@ -31,6 +31,18 @@ module.exports = {
       {
         status_category_name: "Leave Type"
       },
+      {
+        status_category_name: "Claim Status"
+      },
+      {
+        status_category_name: "Relation"
+      },
+      {
+        status_category_name: "Permission Type"
+      },
+      {
+        status_category_name: "Surname Type"
+      },
     ]);
   },
 

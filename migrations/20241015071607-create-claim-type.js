@@ -2,24 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('designation', {
-      designation_id: {
+    await queryInterface.createTable('claim_types', {
+      claim_type_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      department_id: {
-        type: Sequelize.INTEGER
-      },
-      designation_name: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      is_active: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: 1
+      claim_type_name: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +22,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('designation');
+    await queryInterface.dropTable('claim_types');
   }
 };

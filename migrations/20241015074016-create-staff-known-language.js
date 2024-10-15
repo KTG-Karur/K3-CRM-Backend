@@ -2,24 +2,27 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('designation', {
-      designation_id: {
+    await queryInterface.createTable('staff_known_languages', {
+      staff_known_language_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      department_id: {
+      staff_id: {
         type: Sequelize.INTEGER
       },
-      designation_name: {
-        allowNull: false,
-        type: Sequelize.STRING,
+      language_id: {
+        type: Sequelize.INTEGER
       },
-      is_active: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: 1
+      speak: {
+        type: Sequelize.BOOLEAN
+      },
+      read: {
+        type: Sequelize.BOOLEAN
+      },
+      write: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('designation');
+    await queryInterface.dropTable('staff_known_languages');
   }
 };

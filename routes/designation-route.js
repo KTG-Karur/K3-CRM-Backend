@@ -68,20 +68,6 @@ async function updateDesignation(req, res) {
     }
 }
 
-async function deleteDesignation(req, res) {
-    const responseEntries = new ResponseEntry();
-    try {
-        responseEntries.data = await designationServices.deleteDesignation(req.params.designationId);
-        if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
-    } catch (error) {
-        responseEntries.error = true;
-        responseEntries.message = error.message ? error.message : error;
-        responseEntries.code = error.code ? error.code : responseCode.BAD_REQUEST;
-    } finally {
-        res.send(responseEntries);
-    }
-}
-
 
 module.exports = async function (fastify) {
     fastify.route({
@@ -103,12 +89,5 @@ module.exports = async function (fastify) {
         url: '/designation/:designationId',
         preHandler: verifyToken,
         handler: updateDesignation
-    });
-
-    fastify.route({
-        method: 'DELETE',
-        url: '/designation/:designationId',
-        preHandler: verifyToken,
-        handler: deleteDesignation
     });
 };

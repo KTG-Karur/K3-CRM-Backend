@@ -70,20 +70,6 @@ async function updateDepartment(req, res) {
   }
 }
 
-async function deleteDepartment(req, res) {
-  const responseEntries = new ResponseEntry();
-  try {
-    responseEntries.data = await departmentServices.deleteDepartment(req.params.departmentId);
-    if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
-  } catch (error) {
-    responseEntries.error = true;
-    responseEntries.message = error.message ? error.message : error;
-    responseEntries.code = error.code ? error.code : responseCode.BAD_REQUEST;
-  } finally {
-    res.send(responseEntries);
-  }
-}
-
 module.exports = async function (fastify) {
   fastify.route({
     method: 'GET',
@@ -104,12 +90,5 @@ module.exports = async function (fastify) {
     url: '/department/:departmentId',
     preHandler: verifyToken,
     handler: updateDepartment
-  });
-
-  fastify.route({
-    method: 'DELETE',
-    url: '/department/:departmentId',
-    preHandler: verifyToken,
-    handler: deleteDepartment
   });
 };
