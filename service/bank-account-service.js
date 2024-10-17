@@ -10,10 +10,7 @@ async function getBankAccount(query) {
     if (query && Object.keys(query).length) {
       if (query.bankAccountId) {
         iql.bank_account_id = query.bankAccountId;
-      }
-      if (query.companyAccount) {
-        iql.company_account = query.companyAccount;
-      }
+      }  
       if (query.isActive) {
         iql.is_active = query.isActive;
       }
@@ -22,10 +19,8 @@ async function getBankAccount(query) {
       attributes: [['bank_account_id', 'bankAccountId'],
       ['account_holder_name', 'accountHolderName'],
       ['bank_name', 'bankName'],
-      ['company_account', 'companyAccount'],
       ['branch_name', 'branchName'],
       ['account_no', 'accountNo'],
-      ['transaction_id', 'transactionId'],
       ['ifsc_code', 'ifscCode'],
       ['is_active', 'isActive'], ['createdAt', 'createdAt']],
       where: iql,

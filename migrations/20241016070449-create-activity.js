@@ -2,18 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('branches', {
-      branch_id: {
+    await queryInterface.createTable('activities', {
+      activity_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      branch_name: {
+      activity_name: {
         type: Sequelize.STRING
-      },
-      branch_admin_id: {
-        type: Sequelize.INTEGER
       },
       is_active: {
         allowNull: false,
@@ -30,6 +27,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('branches');
+    await queryInterface.dropTable('activities');
   }
 };

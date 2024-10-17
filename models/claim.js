@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     apply_date: DataTypes.DATE,
     claim_status: DataTypes.INTEGER,
     mode_of_payment_id: DataTypes.INTEGER,
-    approved_date: DataTypes.DATE
+    approved_by: DataTypes.INTEGER,
+    approved_date: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'claim',
