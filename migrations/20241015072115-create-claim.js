@@ -12,6 +12,9 @@ module.exports = {
       claim_type_id: {
         type: Sequelize.INTEGER
       },
+      approved_by: {
+        type: Sequelize.INTEGER
+      },
       requested_by: {
         type: Sequelize.INTEGER
       },

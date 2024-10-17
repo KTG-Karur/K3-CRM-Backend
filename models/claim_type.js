@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    claim_type_name: DataTypes.STRING
+    claim_type_name: DataTypes.STRING,
+    is_active: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'claim_type',

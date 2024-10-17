@@ -23,11 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     allowance_date: DataTypes.DATE,
     from_place: DataTypes.STRING,
     to_place: DataTypes.STRING,
-    activity_id: DataTypes.INTEGER,
+    activity_id: DataTypes.STRING,
     total_km: DataTypes.INTEGER,
     amount: DataTypes.STRING,
     bill_no: DataTypes.STRING,
-    bill_image_name: DataTypes.STRING
+    bill_image_name: DataTypes.STRING,
+    is_active: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'petrol_allowance',

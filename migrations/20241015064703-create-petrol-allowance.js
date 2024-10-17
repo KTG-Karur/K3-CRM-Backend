@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       activity_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       total_km: {
         type: Sequelize.INTEGER
@@ -35,6 +35,11 @@ module.exports = {
       },
       bill_image_name: {
         type: Sequelize.STRING
+      },
+      is_active: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,
