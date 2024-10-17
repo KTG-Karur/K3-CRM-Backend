@@ -9,7 +9,7 @@ async function getStaff(query) {
   try {
     let iql = "";
     let count = 0;
-    if (query && Object.keys(query).length) {
+    if (query && Object.keys(query).length) { 
       iql += `WHERE`;
       if (query.staffId) {
         iql += count >= 1 ? ` AND` : ``;
