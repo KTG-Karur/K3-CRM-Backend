@@ -5,22 +5,23 @@ const { verifyToken } = require("../middleware/auth");
 const { ResponseEntry } = require("../helpers/construct-response");
 const responseCode = require("../helpers/status-code");
 const messages = require("../helpers/message");
-const branchServices = require("../service/branch-service");
+const transferStaffServices = require("../service/transfer-staff-service");
 const _ = require('lodash');
 
 const schema = {
-    branchName: { type: "string", optional: false, min: 1, max: 100 },
-    /*address: { type: "string", optional: false, min: 1, max: 100 },
-    email: { type: "string", optional: false, min: 1, max: 100 },
-    city: { type: "string", optional: false, min: 1, max: 100 },
-    contactNo: { type: "number", optional: false, min: 10, max: 10 },
-    pincode: { type: "number", optional: false, min: 6, max: 6 },*/
+    staffId: "number|required|integer|positive",
+    transferFrom: { type: "string", optional: false, min: 1, max: 100 },
+    transferTo: { type: "string", optional: false, min: 1, max: 100 },
+    //activityId: { type: "string", optional: false, min: 1, max: 100 },
+    // totalKm: { type: "string", optional: false, min: 1, max: 100 },
+    // amount: { type: "string", optional: false, min: 1, max: 100 },
+    // billNo: { type: "string", optional: false, min: 1, max: 100 },
 }
 
-async function getBranch(req, res) {
+async function getTransferStaff(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await branchServices.getBranch(req.query);
+        responseEntries.data = await transferStaffServices.getTransferStaff(req.query);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;
@@ -31,7 +32,7 @@ async function getBranch(req, res) {
     }
 }
 
-async function createBranch(req, res) {
+async function createTransferStaff(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -39,7 +40,7 @@ async function createBranch(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await branchServices.createBranch(req.body);
+            responseEntries.data = await transferStaffServices.createTransferStaff(req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -52,7 +53,7 @@ async function createBranch(req, res) {
     }
 }
 
-async function updateBranch(req, res) {
+async function updateTransferStaff(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -61,7 +62,7 @@ async function updateBranch(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await branchServices.updateBranch(req.params.branchId, req.body);
+            responseEntries.data = await transferStaffServices.updateTransferStaff(req.params.transferStaffId, req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -77,22 +78,22 @@ async function updateBranch(req, res) {
 module.exports = async function (fastify) {
     fastify.route({
         method: 'GET',
-        url: '/branch',
+        url: '/transfer-staff',
         preHandler: verifyToken,
-        handler: getBranch
+        handler: getTransferStaff
     });
 
     fastify.route({
         method: 'POST',
-        url: '/branch',
+        url: '/transfer-staff',
         preHandler: verifyToken,
-        handler: createBranch
+        handler: createTransferStaff
     });
 
     fastify.route({
         method: 'PUT',
-        url: '/branch/:branchId',
+        url: '/transfer-staff/:transferStaffId',
         preHandler: verifyToken,
-        handler: updateBranch
+        handler: updateTransferStaff
     });
 };

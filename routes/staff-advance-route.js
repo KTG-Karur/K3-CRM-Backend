@@ -5,22 +5,19 @@ const { verifyToken } = require("../middleware/auth");
 const { ResponseEntry } = require("../helpers/construct-response");
 const responseCode = require("../helpers/status-code");
 const messages = require("../helpers/message");
-const branchServices = require("../service/branch-service");
+const staffAdvanceServices = require("../service/staff-advance-service");
 const _ = require('lodash');
 
 const schema = {
-    branchName: { type: "string", optional: false, min: 1, max: 100 },
-    /*address: { type: "string", optional: false, min: 1, max: 100 },
-    email: { type: "string", optional: false, min: 1, max: 100 },
-    city: { type: "string", optional: false, min: 1, max: 100 },
-    contactNo: { type: "number", optional: false, min: 10, max: 10 },
-    pincode: { type: "number", optional: false, min: 6, max: 6 },*/
+    staffId: "number|required|integer|positive",
+    amount: { type: "string", optional: false, min: 1, max: 100 },
+    advanceStatus: "number|required|integer|positive"
 }
 
-async function getBranch(req, res) {
+async function getStaffAdvance(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await branchServices.getBranch(req.query);
+        responseEntries.data = await staffAdvanceServices.getStaffAdvance(req.query);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;
@@ -31,15 +28,17 @@ async function getBranch(req, res) {
     }
 }
 
-async function createBranch(req, res) {
+async function createStaffAdvance(req, res) {
+   
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
         const validationResponse = await v.validate(req.body, schema)
+        
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await branchServices.createBranch(req.body);
+            responseEntries.data = await staffAdvanceServices.createStaffAdvance(req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -52,7 +51,7 @@ async function createBranch(req, res) {
     }
 }
 
-async function updateBranch(req, res) {
+async function updateStaffAdvance(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -61,7 +60,7 @@ async function updateBranch(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await branchServices.updateBranch(req.params.branchId, req.body);
+            responseEntries.data = await staffAdvanceServices.updateStaffAdvance(req.params.staffAdvanceId, req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -77,22 +76,22 @@ async function updateBranch(req, res) {
 module.exports = async function (fastify) {
     fastify.route({
         method: 'GET',
-        url: '/branch',
+        url: '/staff-advance',
         preHandler: verifyToken,
-        handler: getBranch
+        handler: getStaffAdvance
     });
 
     fastify.route({
         method: 'POST',
-        url: '/branch',
+        url: '/staff-advance',
         preHandler: verifyToken,
-        handler: createBranch
+        handler: createStaffAdvance
     });
 
     fastify.route({
         method: 'PUT',
-        url: '/branch/:branchId',
+        url: '/staff-advance/:staffAdvanceId',
         preHandler: verifyToken,
-        handler: updateBranch
+        handler: updateStaffAdvance
     });
 };

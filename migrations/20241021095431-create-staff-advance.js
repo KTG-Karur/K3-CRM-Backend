@@ -2,38 +2,39 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('branches', {
-      branch_id: {
+    await queryInterface.createTable('staff_advances', {
+      staff_advance_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      branch_name: {
-        type: Sequelize.STRING
-      },
-      address: {
-        type: Sequelize.STRING
-      },
-      city: {
-        type: Sequelize.STRING
-      },
-      pincode: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      cotact_no: {
-        type: Sequelize.STRING
-      },
-      branch_admin_id: {
+      staff_id: {
         type: Sequelize.INTEGER
       },
-      is_active: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: 1
+      apply_date: {
+        type: Sequelize.DATE
+      },
+      approved_date: {
+        type: Sequelize.DATE
+      },
+      approved_by: {
+        type: Sequelize.INTEGER
+      },
+      amount: {
+        type: Sequelize.STRING
+      },
+      reason: {
+        type: Sequelize.STRING
+      },
+      paid_amount: {
+        type: Sequelize.STRING
+      },
+      balance_amount: {
+        type: Sequelize.STRING
+      },
+      advance_status: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -45,6 +46,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('branches');
+    await queryInterface.dropTable('staff_advances');
   }
 };
