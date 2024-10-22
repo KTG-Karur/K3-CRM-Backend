@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    proof_type_name: DataTypes.STRING
+    proof_type_name: DataTypes.STRING,
+    is_active: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'proof_type',

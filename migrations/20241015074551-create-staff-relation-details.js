@@ -15,6 +15,9 @@ module.exports = {
       relation_id: {
         type: Sequelize.INTEGER
       },
+      relation_name: {
+        type: Sequelize.STRING
+      },
       contact_no: {
         type: Sequelize.STRING
       },

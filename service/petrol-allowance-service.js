@@ -37,7 +37,7 @@ async function getPetrolAllowance(query) {
         iql += ` pa.is_active = ${query.isActive}`;
       }
     }
-    console.log(iql)
+
     const result = await sequelize.query(`SELECT pa.petrol_allowance_id "petrolAllowanceId", pa.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
         pa.allowance_date "allowanceDate", pa.from_place "fromPlace", pa.to_place "toPlace",
         pa.activity_id "activityId",pa.is_active "isActive",
@@ -49,10 +49,10 @@ async function getPetrolAllowance(query) {
         LEFT join branches b on b.branch_id = s.branch_id 
         LEFT join activities a ON FIND_IN_SET(a.activity_id, pa.activity_id) ${iql}
         GROUP BY pa.petrol_allowance_id`, {
-        type: QueryTypes.SELECT,
-        raw: true,
-        nest: false
-      });
+      type: QueryTypes.SELECT,
+      raw: true,
+      nest: false
+    });
     return result;
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
@@ -80,9 +80,9 @@ async function updatePetrolAllowance(petrolAllowanceId, putData) {
       petrolAllowanceId: petrolAllowanceId
     }
     return await getPetrolAllowance(req);
-} catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
+  } catch (error) {
+    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
 }
 
 module.exports = {

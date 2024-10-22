@@ -9,7 +9,7 @@ const staffServices = require("../service/staff-service");
 const _ = require('lodash');
 
 const schema = {
-    staffName: { type: "string", optional: false, min: 1, max: 100 }
+    // staffName: { type: "string", optional: false, min: 1, max: 100 }
 }
 
 async function getStaff(req, res) {

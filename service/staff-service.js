@@ -4,12 +4,13 @@ const sequelize = require('../models/index').sequelize;
 const messages = require("../helpers/message");
 const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
+const { generateSerialNumber } = require('../utils/utility');
 
 async function getStaff(query) {
   try {
     let iql = "";
     let count = 0;
-    if (query && Object.keys(query).length) { 
+    if (query && Object.keys(query).length) {
       iql += `WHERE`;
       if (query.staffId) {
         iql += count >= 1 ? ` AND` : ``;
@@ -53,13 +54,33 @@ async function getStaff(query) {
 
 async function createStaff(postData) {
   try {
-    const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
+    const countResult = await sequelize.query(
+      `SELECT staff_code "staffCode" FROM staffs
+      ORDER BY staff_id DESC LIMIT 1`,
+      {
+          type: QueryTypes.SELECT,
+          raw: true,
+          nest: false
+      });
+
+  const applicantCodeFormat = `K3-STAFF-`
+  const personalInfoData = postData.personalInfoData
+  const count = countResult.length > 0 ? parseInt(countResult[0].staffCode.split("-").pop()) : `00000`
+  console.log("in--->")
+  console.log(personalInfoData)
+  personalInfoData.staffCode = await generateSerialNumber(applicantCodeFormat, count)
+      
+    // const staffInfo = postData.personalInfoData
+    const excuteMethod = _.mapKeys(personalInfoData, (value, key) => _.snakeCase(key))
     const staffResult = await sequelize.models.staff.create(excuteMethod);
+
+
     const req = {
       staffId: staffResult.staff_id
     }
     return await getStaff(req);
   } catch (error) {
+    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

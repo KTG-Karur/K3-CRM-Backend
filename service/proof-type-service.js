@@ -23,7 +23,7 @@ async function getProofType(query) {
       }
     }
     const result = await sequelize.query(`SELECT proof_type_id "proofTypeId", proof_type_name "proofTypeName",
-        createdAt, updatedAt
+        createdAt, is_active "isActive"
         FROM proof_types ${iql}`, {
         type: QueryTypes.SELECT,
         raw: true,

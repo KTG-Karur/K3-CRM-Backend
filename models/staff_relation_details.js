@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     contact_no: DataTypes.STRING,
     relation_dob: DataTypes.DATE,
     qualification_id: DataTypes.INTEGER,
-    occupation: DataTypes.STRING
+    occupation: DataTypes.STRING,
+    relation_name: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'staff_relation_details',
