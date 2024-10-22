@@ -11,7 +11,7 @@ const _ = require('lodash');
 const schema = {
     staffId: "number|required|integer|positive",
     amount: { type: "string", optional: false, min: 1, max: 100 },
-    advanceStatus: "number|required|integer|positive"
+    advanceStatus: "number|required|integer|positive" 
 }
 
 async function getStaffAdvance(req, res) {
