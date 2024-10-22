@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class branch extends Model {
+  class advance_payment_history extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,23 +13,20 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  branch.init({
-    branch_id: {
+  advance_payment_history.init({
+    advance_payment_history_id:{
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    branch_name: DataTypes.STRING,
-    address: DataTypes.STRING,
-    city: DataTypes.STRING,
-    pincode: DataTypes.STRING,
-    email: DataTypes.STRING,
-    contact_no: DataTypes.STRING,
-    branch_admin_id: DataTypes.INTEGER,
-    is_active: DataTypes.BOOLEAN,
+    staff_advance_id: DataTypes.INTEGER,
+    paid_amount: DataTypes.STRING,
+    balance_amount: DataTypes.STRING,
+    paid_date: DataTypes.DATE,
+    paid_to: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'branch',
+    modelName: 'advance_payment_history',
   });
-  return branch;
+  return advance_payment_history;
 };
