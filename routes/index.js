@@ -14,5 +14,6 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require('./claim-type-route'));
   fastify.register(require('./claim-route'));
   fastify.register(require('./branch-route'));
+  fastify.register(require('./holiday-route'));
   next();
 };
