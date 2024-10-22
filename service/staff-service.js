@@ -66,8 +66,6 @@ async function createStaff(postData) {
   const applicantCodeFormat = `K3-STAFF-`
   const personalInfoData = postData.personalInfoData
   const count = countResult.length > 0 ? parseInt(countResult[0].staffCode.split("-").pop()) : `00000`
-  console.log("in--->")
-  console.log(personalInfoData)
   personalInfoData.staffCode = await generateSerialNumber(applicantCodeFormat, count)
       
     // const staffInfo = postData.personalInfoData
