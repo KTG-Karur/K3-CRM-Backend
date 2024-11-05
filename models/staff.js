@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     branch_id: DataTypes.INTEGER,
     date_of_joining: DataTypes.DATE,
     date_of_reliving: DataTypes.DATE,
+    dob: DataTypes.DATE,
     role_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER,
     gender_id: DataTypes.INTEGER,

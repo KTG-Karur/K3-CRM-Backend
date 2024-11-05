@@ -15,13 +15,13 @@ module.exports = {
       language_id: {
         type: Sequelize.INTEGER
       },
-      speak: {
+      language_speak: {
         type: Sequelize.BOOLEAN
       },
-      read: {
+      language_read: {
         type: Sequelize.BOOLEAN
       },
-      write: {
+      language_write: {
         type: Sequelize.BOOLEAN
       },
       createdAt: {

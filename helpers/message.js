@@ -12,4 +12,5 @@ module.exports = {
     UNSUPPORTED_FILE : 'Unsupported Files...!',
     UPLOADED_SUCCESSFULLY : 'Uploaded Successfully...!',
     UNAVAILABLE_BALANCE : 'Insufficient Balance...!',
+    LEAVE_APPLIED_BEFORE : 'Leave Applied Before...!',
 };

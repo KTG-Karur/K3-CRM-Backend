@@ -21,9 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     staff_id: DataTypes.INTEGER,
     language_id: DataTypes.INTEGER,
-    speak: DataTypes.BOOLEAN,
-    read: DataTypes.BOOLEAN,
-    write: DataTypes.BOOLEAN
+    language_speak: DataTypes.BOOLEAN,
+    language_read: DataTypes.BOOLEAN,
+    language_write: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'staff_known_language',
