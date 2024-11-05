@@ -24,7 +24,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      cotact_no: {
+      contact_no: {
         type: Sequelize.STRING
       },
       branch_admin_id: {

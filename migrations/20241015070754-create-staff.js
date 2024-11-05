@@ -54,6 +54,9 @@ module.exports = {
       branch_id: {
         type: Sequelize.INTEGER
       },
+      dob: {
+        type: Sequelize.DATE
+      },
       date_of_joining: {
         type: Sequelize.DATE
       },

@@ -5,17 +5,17 @@ const { verifyToken } = require("../middleware/auth");
 const { ResponseEntry } = require("../helpers/construct-response");
 const responseCode = require("../helpers/status-code");
 const messages = require("../helpers/message");
-const staffServices = require("../service/staff-service");
+const staffWorkExperienceServices = require("../service/staff-work-experience-service");
 const _ = require('lodash');
 
 const schema = {
-    // staffName: { type: "string", optional: false, min: 1, max: 100 }
+    // staffWorkExperienceName: { type: "string", optional: false, min: 1, max: 100 }
 }
 
-async function getStaff(req, res) {
+async function getStaffWorkExperience(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await staffServices.getStaff(req.query);
+        responseEntries.data = await staffWorkExperienceServices.getStaffWorkExperience(req.query);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;
@@ -26,21 +26,7 @@ async function getStaff(req, res) {
     }
 }
 
-async function getStaffDetails(req, res) {
-    const responseEntries = new ResponseEntry();
-    try {
-        responseEntries.data = await staffServices.getStaffDetails(req.query);
-        if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
-    } catch (error) {
-        responseEntries.error = true;
-        responseEntries.message = error.message ? error.message : error;
-        responseEntries.code = responseCode.BAD_REQUEST;
-    } finally {
-        res.send(responseEntries);
-    }
-}
-
-async function createStaff(req, res) {
+async function createStaffWorkExperience(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -48,7 +34,7 @@ async function createStaff(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await staffServices.createStaff(req.body);
+            responseEntries.data = await staffWorkExperienceServices.createStaffWorkExperience(req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -61,7 +47,7 @@ async function createStaff(req, res) {
     }
 }
 
-async function updateStaff(req, res) {
+async function updateStaffWorkExperience(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -70,7 +56,7 @@ async function updateStaff(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await staffServices.updateStaff(req.params.staffId, req.body);
+            responseEntries.data = await staffWorkExperienceServices.updateStaffWorkExperience(req.params.staffWorkExperienceId, req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -82,33 +68,46 @@ async function updateStaff(req, res) {
     }
 }
 
+async function deleteStaffWorkExperience(req, res) {
+    const responseEntries = new ResponseEntry();
+    try {
+        responseEntries.data = await staffRelationServices.deleteStaffWorkExperience(req.params.staffRelationId);
+        if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
+    } catch (error) {
+        responseEntries.error = true;
+        responseEntries.message = error.message ? error.message : error;
+        responseEntries.code = error.code ? error.code : responseCode.BAD_REQUEST;
+    } finally {
+        res.send(responseEntries);
+    }
+}
 
 module.exports = async function (fastify) {
     fastify.route({
         method: 'GET',
-        url: '/staff',
+        url: '/work-experience',
         preHandler: verifyToken,
-        handler: getStaff
-    });
-
-    fastify.route({
-        method: 'GET',
-        url: '/staff-details',
-        preHandler: verifyToken,
-        handler: getStaffDetails
+        handler: getStaffWorkExperience
     });
 
     fastify.route({
         method: 'POST',
-        url: '/staff',
+        url: '/work-experience',
         preHandler: verifyToken,
-        handler: createStaff
+        handler: createStaffWorkExperience
     });
 
     fastify.route({
         method: 'PUT',
-        url: '/staff/:staffId',
+        url: '/work-experience/:staffWorkExperienceId',
         preHandler: verifyToken,
-        handler: updateStaff
+        handler: updateStaffWorkExperience
+    });
+
+    fastify.route({
+        method: 'DELETE',
+        url: '/work-experience/:staffWorkExperienceId',
+        preHandler: verifyToken,
+        handler: deleteStaffWorkExperience
     });
 };

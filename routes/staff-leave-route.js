@@ -5,42 +5,28 @@ const { verifyToken } = require("../middleware/auth");
 const { ResponseEntry } = require("../helpers/construct-response");
 const responseCode = require("../helpers/status-code");
 const messages = require("../helpers/message");
-const staffServices = require("../service/staff-service");
+const staffLeaveServices = require("../service/staff-leave-service");
 const _ = require('lodash');
 
 const schema = {
-    // staffName: { type: "string", optional: false, min: 1, max: 100 }
+    // staffLeaveName: { type: "string", optional: false, min: 1, max: 100 }
 }
 
-async function getStaff(req, res) {
+async function getStaffLeave(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await staffServices.getStaff(req.query);
+        responseEntries.data = await staffLeaveServices.getStaffLeave(req.query);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;
-        responseEntries.message = error.message ? error.message : error;
+        responseEntries.message = error;
         responseEntries.code = responseCode.BAD_REQUEST;
     } finally {
         res.send(responseEntries);
     }
 }
 
-async function getStaffDetails(req, res) {
-    const responseEntries = new ResponseEntry();
-    try {
-        responseEntries.data = await staffServices.getStaffDetails(req.query);
-        if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
-    } catch (error) {
-        responseEntries.error = true;
-        responseEntries.message = error.message ? error.message : error;
-        responseEntries.code = responseCode.BAD_REQUEST;
-    } finally {
-        res.send(responseEntries);
-    }
-}
-
-async function createStaff(req, res) {
+async function createStaffLeave(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -48,7 +34,7 @@ async function createStaff(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await staffServices.createStaff(req.body);
+            responseEntries.data = await staffLeaveServices.createStaffLeave(req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -61,7 +47,7 @@ async function createStaff(req, res) {
     }
 }
 
-async function updateStaff(req, res) {
+async function updateStaffLeave(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -70,7 +56,7 @@ async function updateStaff(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await staffServices.updateStaff(req.params.staffId, req.body);
+            responseEntries.data = await staffLeaveServices.updateStaffLeave(req.params.staffLeaveId, req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -86,29 +72,22 @@ async function updateStaff(req, res) {
 module.exports = async function (fastify) {
     fastify.route({
         method: 'GET',
-        url: '/staff',
+        url: '/staff-leave',
         preHandler: verifyToken,
-        handler: getStaff
-    });
-
-    fastify.route({
-        method: 'GET',
-        url: '/staff-details',
-        preHandler: verifyToken,
-        handler: getStaffDetails
+        handler: getStaffLeave
     });
 
     fastify.route({
         method: 'POST',
-        url: '/staff',
+        url: '/staff-leave',
         preHandler: verifyToken,
-        handler: createStaff
+        handler: createStaffLeave
     });
 
     fastify.route({
         method: 'PUT',
-        url: '/staff/:staffId',
+        url: '/staff-leave/:staffLeaveId',
         preHandler: verifyToken,
-        handler: updateStaff
+        handler: updateStaffLeave
     });
 };

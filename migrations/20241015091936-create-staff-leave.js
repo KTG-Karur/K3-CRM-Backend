@@ -15,8 +15,11 @@ module.exports = {
       leave_type_id: {
         type: Sequelize.INTEGER
       },
-      leave_date: {
-        type: Sequelize.DATE
+      day_count: {
+        type: Sequelize.INTEGER
+      },
+      cancel_reason: {
+        type: Sequelize.STRING
       },
       reason: {
         type: Sequelize.STRING
