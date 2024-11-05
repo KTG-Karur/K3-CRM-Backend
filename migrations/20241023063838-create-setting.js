@@ -2,33 +2,33 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('branches', {
-      branch_id: {
+    await queryInterface.createTable('settings', {
+      setting_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      branch_name: {
+      from_day: {
         type: Sequelize.STRING
       },
-      address: {
+      to_day: {
         type: Sequelize.STRING
       },
-      city: {
+      esi_percentage: {
         type: Sequelize.STRING
       },
-      pincode: {
+      pf_percentage: {
         type: Sequelize.STRING
       },
-      email: {
+      permission_deduction: {
         type: Sequelize.STRING
       },
-      contact_no: {
+      leave_deduction: {
         type: Sequelize.STRING
       },
-      branch_admin_id: {
-        type: Sequelize.INTEGER
+      image_name: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -40,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('branches');
+    await queryInterface.dropTable('settings');
   }
 };
