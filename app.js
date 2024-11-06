@@ -25,7 +25,7 @@ fastify.register(require("@fastify/cors",{
 }));
 //JWT---->
 fastify.register(fastifyJWT, {secret: "KtgUserToken@2011", verify :{
-    extractToken: (req)=> req.headers.auth
+    extractToken: (req)=> req.headers?.auth || req.headers?.authorization.split(' ')[1]
 }});
 //HELMET---->
 fastify.register(helmet);
