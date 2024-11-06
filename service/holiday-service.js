@@ -14,17 +14,7 @@ async function getHoliday(query) {
       if (query.holidayId) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
-        iql += ` de.holiday_id = ${query.holidayId}`;
-      }
-      if (query.departmentId) {
-        iql += count >= 1 ? ` AND` : ``;
-        count++;
-        iql += ` de.department_id = ${query.departmentId}`;
-      }
-      if (query.isActive) {
-        iql += count >= 1 ? ` AND` : ``;
-        count++;
-        iql += ` de.is_active = ${query.isActive}`;
+        iql += ` holiday_id = ${query.holidayId}`;
       }
     }
     const result = await sequelize.query(`SELECT holiday_id "holidayId", holiday_date "holidayDate", reason, createdAt FROM holidays ${iql}`, {

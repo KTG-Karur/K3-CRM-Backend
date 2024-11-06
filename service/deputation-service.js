@@ -26,9 +26,12 @@ async function getDeputation(query) {
     const result = await sequelize.query(`SELECT ts.deputation_id "deputationId",
       ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
       ts.deputation_code "deputationCode", ts.deputation_date "deputationDate",
-      ts.from_date "fromDate", ts.to_date "toDate", ts.from_place "fromPlace", ts.to_place "toPlace", ts.	reason "reason",ts.deputation_by "deputationById",CONCAT(s.first_name,' ',s.last_name) as deputationBy,
+      ts.from_date "fromDate", ts.to_date "toDate", b.branch_id "from_place", b2.branch_id "to_place",
+      b.branch_name "fromPlaceName", b2.branch_name "toPlaceName", ts.	reason "reason",ts.deputation_by "deputationById",CONCAT(s.first_name,' ',s.last_name) as deputationBy,
       ts.createdAt
       FROM deputations ts
+      left join branches b on b.branch_id = ts.from_place
+      left join branches b2 on b2.branch_id = ts.to_place
       left join staffs s on s.staff_id = ts.staff_id 
       left join staffs s2 on s2.staff_id = ts.deputation_by ${iql}`, {
       type: QueryTypes.SELECT,

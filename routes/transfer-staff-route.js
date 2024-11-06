@@ -10,8 +10,8 @@ const _ = require('lodash');
 
 const schema = {
     staffId: "number|required|integer|positive",
-    transferFrom: { type: "string", optional: false, min: 1, max: 100 },
-    transferTo: { type: "string", optional: false, min: 1, max: 100 },
+    transferFrom: "number|required|integer|positive",
+    transferTo: "number|required|integer|positive",
     //activityId: { type: "string", optional: false, min: 1, max: 100 },
     // totalKm: { type: "string", optional: false, min: 1, max: 100 },
     // amount: { type: "string", optional: false, min: 1, max: 100 },

@@ -26,10 +26,13 @@ async function getTransferStaff(query) {
     const result = await sequelize.query(`SELECT ts.transfer_staff_id "transferStaffId",
       ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
       ts.transfer_code "transferCode", ts.transfer_date "transferDate",
-      ts.transfer_from "transferFrom", ts.transfer_to "transferTo",
+      b.branch_id "transferFrom", b2.branch_id "transferTo",
+      b.branch_name "transferFromName", b2.branch_name "transferToName",
       ts.transfered_by "transferedById",CONCAT(s.first_name,' ',s.last_name) as transferedBy,
       ts.createdAt
       FROM transfer_staffs ts
+      left join branches b on b.branch_id = ts.transfer_from
+      left join branches b2 on b2.branch_id = ts.transfer_to
       left join staffs s on s.staff_id = ts.staff_id 
       left join staffs s2 on s2.staff_id = ts.transfered_by ${iql}`, {
       type: QueryTypes.SELECT,

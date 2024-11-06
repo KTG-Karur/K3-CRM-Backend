@@ -9,7 +9,7 @@ const holidayServices = require("../service/holiday-service");
 const _ = require('lodash');
 
 const schema = {
-    holidayName: { type: "string", optional: false, min: 1, max: 100 }
+    //reason: { type: "string", optional: false, min: 1, max: 100 }
 }
 
 async function getHoliday(req, res) {

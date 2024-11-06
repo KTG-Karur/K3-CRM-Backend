@@ -46,7 +46,7 @@ async function createStaffAdvance(postData) {
   try {       
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
     const staffAdvanceResult = await sequelize.models.staff_advance.create(excuteMethod);
-    console.log(staffAdvanceResult);
+    
     const req = {
       staffAdvanceId: staffAdvanceResult.staff_advance_id
     }
@@ -57,9 +57,10 @@ async function createStaffAdvance(postData) {
 }
 
 async function updateStaffAdvance(staffAdvanceId, putData) {
-  try {
+  try {   
+
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
-    const staffAdvanceResult = await sequelize.models.staff_advances.update(excuteMethod, { where: { staff_advance_staff_id: staffAdvanceId } });
+    const staffAdvanceResult = await sequelize.models.staff_advance.update(excuteMethod, { where: { staff_advance_id: staffAdvanceId } });
     const req = {
       staffAdvanceId: staffAdvanceId
     }
