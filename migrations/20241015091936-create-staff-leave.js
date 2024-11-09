@@ -42,6 +42,9 @@ module.exports = {
       },
       updatedAt: {
         type: Sequelize.DATE
+      },
+      is_active: {
+        type: Sequelize.INTEGER
       }
     });
   },

@@ -29,6 +29,7 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require('./staff-known-language-route'));
   fastify.register(require('./staff-proof-id-route'));
   fastify.register(require('./staff-relation-service'));
+  fastify.register(require('./staff-proof-upload-route'));
   fastify.register(require('./staff-leave-route'));
   next();
 };

@@ -98,8 +98,10 @@ async function getStaffDetails(query) {
       raw: true,
       nest: false
     });
-    const decrptpassword = await decrptPassword(jobRoleDetails[0].password);
-    jobRoleDetails[0].password = decrptpassword;
+    if (jobRoleDetails[0].password !== null && jobRoleDetails[0].password !== undefined) {
+      const decrptpassword = await decrptPassword(jobRoleDetails[0].password);
+      jobRoleDetails[0].password = decrptpassword;
+    }
 
     const idProof = await sequelize.query(`
       SELECT st.staff_proof_id "staffProofId", st.staff_id "staffId", 
