@@ -12,10 +12,12 @@ module.exports = {
       attendance_date: {
         type: Sequelize.DATE
       },
-      attendance_status_id: {
+      staff_id: {
         type: Sequelize.INTEGER
       },
-      staff_id: {
+      branch_id: { type: Sequelize.INTEGER },
+      department_id: { type: Sequelize.INTEGER },
+      attendance_status_id: {
         type: Sequelize.INTEGER
       },
       attendance_incharge_id: {

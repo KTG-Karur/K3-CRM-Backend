@@ -16,7 +16,19 @@ async function getStaffLeave(query) {
         count++;
         iql += ` sl.staff_leave_id = ${query.staffLeaveId}`;
       }
+      if (query.leaveStatusId) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` sl.leave_status_id = ${query.leaveStatusId}`;
+      }
+      if (query.attendanceDate) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` sl.from_date <= '${query.attendanceDate}' AND '${query.attendanceDate}' <= sl.to_date`;
+      }
     }
+    console.log("query")
+    console.log(iql)
     const result = await sequelize.query(
       `SELECT sl.staff_leave_id "staffLeaveId", sl.staff_id "staffId",
         sl.leave_type_id "leaveTypeId",sl3.status_name "leaveTypeName",CONCAT(s.first_name,' ',s.last_name) as staffName,
@@ -33,6 +45,8 @@ async function getStaffLeave(query) {
         nest: false,
       }
     );
+    console.log("result")
+    console.log(result)
     return result;
   } catch (error) {
     throw new Error(

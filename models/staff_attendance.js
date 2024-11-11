@@ -20,8 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     attendance_date: DataTypes.DATE,
-    attendance_status_id: DataTypes.INTEGER,
     staff_id: DataTypes.INTEGER,
+    branch_id: DataTypes.INTEGER,
+    department_id: DataTypes.INTEGER,
+    attendance_status_id: DataTypes.INTEGER,
     attendance_incharge_id: DataTypes.INTEGER
   }, {
     sequelize,
