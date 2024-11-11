@@ -95,7 +95,40 @@ async function createStaffLeave(postData) {
 async function updateStaffLeave(staffLeaveId, putData) {
   try {
     // check is cancelled or not
-    if (putData.leaveStatusId != 28) {
+    if (putData.leaveStatusId == 28) {
+      const checkPerviousApplyLeave = await sequelize.query(
+        `SELECT sl.staff_leave_id "staffLeaveId"
+          FROM staff_leaves sl
+          WHERE (
+             '${putData.fromDate}' <= sl.to_date 
+              AND '${putData.toDate}' >= sl.from_date AND sl.staff_id = ${putData.staffId} AND sl.leave_status_id != 30 AND sl.staff_leave_id <> ${staffLeaveId}
+          )`,
+        {
+          type: QueryTypes.SELECT,
+          raw: true,
+          nest: false,
+        }
+      );
+
+      
+      if (checkPerviousApplyLeave.length <= 0) {
+        const excuteMethod = _.mapKeys(putData, (value, key) =>
+          _.snakeCase(key)
+        );
+        
+        const staffLeaveResult = await sequelize.models.staff_leave.update(
+          excuteMethod,
+          { where: { staff_leave_id: staffLeaveId } }
+        );
+        const req = {
+          staffLeaveId: staffLeaveId,
+        };
+        return await getStaffLeave(req);
+      }else {
+        throw new Error(messages.LEAVE_APPLIED_BEFORE);
+      }
+    } else {
+      
       const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key));
       const staffLeaveResult = await sequelize.models.staff_leave.update(
         excuteMethod,
@@ -105,37 +138,6 @@ async function updateStaffLeave(staffLeaveId, putData) {
         staffLeaveId: staffLeaveId,
       };
       return await getStaffLeave(req);
-    } else {
-      const checkPerviousApplyLeave = await sequelize.query(
-        `SELECT sl.staff_leave_id "staffLeaveId"
-          FROM staff_leaves sl
-          WHERE (
-             '${putData.fromDate}' <= sl.to_date 
-              AND '${putData.toDate}' >= sl.from_date AND sl.staff_id = ${putData.staffId} AND sl.leave_status_id != 30
-          )`,
-        {
-          type: QueryTypes.SELECT,
-          raw: true,
-          nest: false,
-        }
-      );
-      if (checkPerviousApplyLeave.length <= 0) {
-        const excuteMethod = _.mapKeys(putData, (value, key) =>
-          _.snakeCase(key)
-        );
-        console.log("excuteMethod");
-        console.log(excuteMethod);
-        const staffLeaveResult = await sequelize.models.staff_leave.update(
-          excuteMethod,
-          { where: { staff_leave_id: staffLeaveId } }
-        );
-        const req = {
-          staffLeaveId: staffLeaveId,
-        };
-        return await getStaffLeave(req);
-      } else {
-        throw new Error(messages.LEAVE_APPLIED_BEFORE);
-      }
     }
   } catch (error) {
     throw new Error(error);

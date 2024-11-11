@@ -28,10 +28,11 @@ async function getStaffAdvance(query) {
       ts.apply_date "applyDate", ts.approved_date "approvedDate",
       ts.amount "amount", ts.reason "reason", ts.paid_amount "paidAmount", ts.balance_amount "balanceAmount", ts.advance_status "advanceStatus",
       ts.approved_by "	approvedById",CONCAT(s.first_name,' ',s.last_name) as 	approvedBy,
-      ts.createdAt
+      ts.createdAt, COALESCE(SUM(ph.paid_amount), 0) AS "paidAmount"
       FROM staff_advances ts
       left join staffs s on s.staff_id = ts.staff_id 
-      left join staffs s2 on s2.staff_id = ts.approved_by ${iql}`, {
+      left join staffs s2 on s2.staff_id = ts.approved_by
+      left join advance_payment_histories ph on ph.staff_advance_id = ts.staff_advance_id GROUP BY ts.staff_advance_id  ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false

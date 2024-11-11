@@ -10,6 +10,7 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require('./bank-account-route'));
   fastify.register(require('./proof-type-route'));
   fastify.register(require('./transfer-staff-route'));
+  fastify.register(require('./advance-payment-history-route'));
   fastify.register(require('./attendance-incharge-route'));
   fastify.register(require('./permission-route'));
   fastify.register(require('./setting-route'));
