@@ -1,27 +1,21 @@
 "use strict";
 
-const Validator = require('fastest-validator')
+const Validator = require('fastest-validator');
 const { verifyToken } = require("../middleware/auth");
 const { ResponseEntry } = require("../helpers/construct-response");
 const responseCode = require("../helpers/status-code");
 const messages = require("../helpers/message");
-const staffAttendanceServices = require("../service/staff-attendance-service");
+const staffSalaryHistoryServices = require("../service/staff-salary-history-service");
 const _ = require('lodash');
 
 const schema = {
     staffId: "number|required|integer|positive",
-    transferFrom: "number|required|integer|positive",
-    transferTo: "number|required|integer|positive",
-    //activityId: { type: "string", optional: false, min: 1, max: 100 },
-    // totalKm: { type: "string", optional: false, min: 1, max: 100 },
-    // amount: { type: "string", optional: false, min: 1, max: 100 },
-    // billNo: { type: "string", optional: false, min: 1, max: 100 },
 }
 
-async function getStaffAttendance(req, res) {
+async function getStaffSalaryHistory(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await staffAttendanceServices.getStaffAttendance(req.query);
+        responseEntries.data = await staffSalaryHistoryServices.getStaffSalaryHistory(req.query);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;
@@ -32,7 +26,7 @@ async function getStaffAttendance(req, res) {
     }
 }
 
-async function createStaffAttendance(req, res) {
+async function createStaffSalaryHistory(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -40,7 +34,7 @@ async function createStaffAttendance(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await staffAttendanceServices.createStaffAttendance(req.body);
+            responseEntries.data = await staffSalaryHistoryServices.createStaffSalaryHistory(req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -53,7 +47,7 @@ async function createStaffAttendance(req, res) {
     }
 }
 
-async function updateStaffAttendance(req, res) {
+async function updateStaffSalaryHistory(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
@@ -62,7 +56,7 @@ async function updateStaffAttendance(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await staffAttendanceServices.updateStaffAttendance(req.params.staffAttendanceId, req.body);
+            responseEntries.data = await staffSalaryHistoryServices.updateStaffSalaryHistory(req.params.staffSalaryHistoryId, req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -78,22 +72,22 @@ async function updateStaffAttendance(req, res) {
 module.exports = async function (fastify) {
     fastify.route({
         method: 'GET',
-        url: '/staff-attendance',
+        url: '/staff-salary-history',
         preHandler: verifyToken,
-        handler: getStaffAttendance
+        handler: getStaffSalaryHistory
     });
 
     fastify.route({
         method: 'POST',
-        url: '/staff-attendance',
+        url: '/staff-salary-history',
         preHandler: verifyToken,
-        handler: createStaffAttendance
+        handler: createStaffSalaryHistory
     });
 
     fastify.route({
         method: 'PUT',
-        url: '/staff-attendance/:staffAttendanceId',
+        url: '/staff-salary-history/:staffSalaryHistoryId',
         preHandler: verifyToken,
-        handler: updateStaffAttendance
+        handler: updateStaffSalaryHistory
     });
 };

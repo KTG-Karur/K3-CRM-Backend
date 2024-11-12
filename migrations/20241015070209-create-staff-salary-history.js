@@ -12,6 +12,12 @@ module.exports = {
       staff_id: {
         type: Sequelize.INTEGER
       },
+      branch_id: {
+        type: Sequelize.INTEGER
+      },
+      department_id: {
+        type: Sequelize.INTEGER
+      },
       salary_date: {
         type: Sequelize.DATE
       },

@@ -32,6 +32,7 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require('./staff-relation-service'));
   fastify.register(require('./staff-proof-upload-route'));
   fastify.register(require('./staff-leave-route'));
-  fastify.register(require("./staff-attendance-route"))
+  fastify.register(require("./staff-attendance-route"));
+  fastify.register(require("./staff-salary-history-route"));
   next();
 };
