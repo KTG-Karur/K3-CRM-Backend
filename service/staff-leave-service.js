@@ -27,12 +27,11 @@ async function getStaffLeave(query) {
         iql += ` sl.from_date <= '${query.attendanceDate}' AND '${query.attendanceDate}' <= sl.to_date`;
       }
     }
-    console.log("query")
-    console.log(iql)
     const result = await sequelize.query(
       `SELECT sl.staff_leave_id "staffLeaveId", sl.staff_id "staffId",
         sl.leave_type_id "leaveTypeId",sl3.status_name "leaveTypeName",CONCAT(s.first_name,' ',s.last_name) as staffName,
         sl.day_count "dayCount", sl.reason, sl.from_date "fromDate",
+         s.staff_code "staffCode",
         sl.to_date "toDate", sl.approved_by "approvedBy", sl.leave_status_id "leaveStatusId",
         sl2.status_name "statusName", sl.createdAt, sl.updatedAt
         FROM staff_leaves sl
@@ -45,8 +44,6 @@ async function getStaffLeave(query) {
         nest: false,
       }
     );
-    console.log("result")
-    console.log(result)
     return result;
   } catch (error) {
     throw new Error(
@@ -110,12 +107,12 @@ async function updateStaffLeave(staffLeaveId, putData) {
         }
       );
 
-      
+
       if (checkPerviousApplyLeave.length <= 0) {
         const excuteMethod = _.mapKeys(putData, (value, key) =>
           _.snakeCase(key)
         );
-        
+
         const staffLeaveResult = await sequelize.models.staff_leave.update(
           excuteMethod,
           { where: { staff_leave_id: staffLeaveId } }
@@ -124,11 +121,11 @@ async function updateStaffLeave(staffLeaveId, putData) {
           staffLeaveId: staffLeaveId,
         };
         return await getStaffLeave(req);
-      }else {
+      } else {
         throw new Error(messages.LEAVE_APPLIED_BEFORE);
       }
     } else {
-      
+
       const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key));
       const staffLeaveResult = await sequelize.models.staff_leave.update(
         excuteMethod,

@@ -14,7 +14,7 @@ const schema = {
     // totalKm: { type: "string", optional: false, min: 1, max: 100 },
     // amount: { type: "string", optional: false, min: 1, max: 100 },
     // billNo: { type: "string", optional: false, min: 1, max: 100 },
-    
+
 }
 
 async function getStaffAttendance(req, res) {
@@ -61,7 +61,7 @@ async function updateStaffAttendance(req, res) {
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
-            responseEntries.data = await staffAttendanceServices.updateStaffAttendance(req.params.staffAttendanceId, req.body);
+            responseEntries.data = await staffAttendanceServices.updateStaffAttendance(req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
     } catch (error) {
@@ -91,7 +91,7 @@ module.exports = async function (fastify) {
 
     fastify.route({
         method: 'PUT',
-        url: '/staff-attendance/:staffAttendanceId',
+        url: '/staff-attendance',
         preHandler: verifyToken,
         handler: updateStaffAttendance
     });

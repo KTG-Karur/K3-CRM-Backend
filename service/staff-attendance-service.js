@@ -31,11 +31,14 @@ async function getStaffAttendance(query) {
     const result = await sequelize.query(
       `SELECT ts.staff_attendance_id "staffAttendanceId",
       ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
+      s.staff_code "staffCode",
+      ts.attendance_status_id "attendanceStatusId",
+      ts.attendance_incharge_id	 "attendanceInchargeId",
+      ts.attendance_date "attendanceDate",
       b.branch_id "branchId",
       b.branch_name "branchName", 
       d.department_id "departmentId",
-      d.department_name "departmentName",
-      ts.createdAt
+      d.department_name "departmentName"
       FROM staff_attendances ts
       left join branches b on b.branch_id = ts.branch_id
       left join department d on d.department_id = ts.department_id
@@ -80,15 +83,23 @@ async function createStaffAttendance(postData) {
   }
 }
 
-async function updateStaffAttendance(staffAttendanceId, putData) {
+async function updateStaffAttendance(putData) {
   try {
-    const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key));
-    const staffAttendanceResult =
-      await sequelize.models.staff_attendance.update(excuteMethod, {
-        where: { staff_attendance_id: staffAttendanceId },
-      });
+    const staffAttendanceId = 1;
+    const excuteMethod = _.map(putData.staffAttendance, (item) =>
+      _.mapKeys(item, (value, key) => _.snakeCase(key))
+    );
+
+    console.log("excuteMethod")
+    console.log(excuteMethod)
+
+    const staffAttendanceResult = excuteMethod.map(excuteData => {
+      return sequelize.models.staff_attendance.update(excuteData, {
+        where: { staff_attendance_id: excuteData.staff_attendance_id },
+      })
+    })
     const req = {
-      staffAttendanceId: staffAttendanceId,
+      attendanceDate: putData.staffAttendance[0].attendanceDate,
     };
     return await getStaffAttendance(req);
   } catch (error) {
