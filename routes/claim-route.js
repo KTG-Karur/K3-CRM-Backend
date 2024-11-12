@@ -21,7 +21,7 @@ const schema = {
 async function getClaim(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await claimServices.getClaim(req.query);
+        responseEntries.data = await claimServices.getClaim(req.query, req.auth);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;

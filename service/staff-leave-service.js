@@ -5,7 +5,7 @@ const messages = require("../helpers/message");
 const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 
-async function getStaffLeave(query) {
+async function getStaffLeave(query, auth) {
   try {
     let iql = "";
     let count = 0;
@@ -17,6 +17,12 @@ async function getStaffLeave(query) {
         iql += ` sl.staff_leave_id = ${query.staffLeaveId}`;
       }
     }
+
+    if (auth.branch_id && auth.role_id === 3) {
+      iql += count >= 1 ? ` AND` : `WHERE`;
+      iql += ` s.branch_id = ${auth.branch_id}`;
+    }
+
     const result = await sequelize.query(`SELECT sl.staff_leave_id "staffLeaveId", sl.staff_id "staffId",
         sl.leave_type_id "leaveTypeId",sl3.status_name "leaveTypeName",CONCAT(s.first_name,' ',s.last_name) as staffName,
         sl.day_count "dayCount", sl.reason, sl.from_date "fromDate",

@@ -69,11 +69,16 @@ async function getUserLogin(query) {
                 iql += ` u.is_active = ${query.isActive}`;
             }
         }
-        const result = await sequelize.query(`SELECT a.applicant_id "applicantId", a.applicant_code "applicantCode",
-            CONCAT(a.first_name,' ',a.last_name) as userName,a.contact_no "contactNo",
-            a.user_id "userId",u.password "password"
-            FROM applicants a
-            left join users u on u.user_id = a.user_id  ${iql}`, {
+        const result = await sequelize.query(`SELECT 
+            s.*, 
+            r.role_name AS role_name, 
+            u.password AS password
+            FROM staffs s
+            left join 
+            users u on u.user_id = s.user_id 
+            left join 
+            role r on r.role_id = s.role_id  
+            ${iql}`, {
             type: QueryTypes.SELECT,
             raw: true,
             nest: false

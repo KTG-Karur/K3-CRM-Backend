@@ -33,7 +33,7 @@ async function getUserLogin(req, res) {
   try {
     responseEntries.data = await loginServices.getUserLogin(req.query);
     const data  = req.query
-    const token = fastify.jwt.sign({email : data.userName})
+    const token = fastify.jwt.sign({user_id : responseEntries.data[0].user_id}, { expiresIn: "1d" })
     responseEntries.token = token
     if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
   } catch (error) {

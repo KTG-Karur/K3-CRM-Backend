@@ -6,7 +6,7 @@ const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 const { generateSerialNumber, encrptPassword } = require('../utils/utility');
 const { createBankAccount, updateBankAccount } = require('./bank-account-service');
-const { createUser } = require('./user-service');
+const { createUser, updateUser } = require('./user-service');
 const { createStaffWorkExperience, updateStaffWorkExperience } = require('./staff-work-experience-service');
 const { createStaffKnownLanguage, updateStaffKnownLanguage } = require('./staff-known-language-service');
 const { createStaffQualification, updateStaffQualification } = require('./staff-qualification-service');
@@ -14,7 +14,7 @@ const { createStaffRelation, updateStaffRelation } = require('./staff-relation-s
 const { createStaffProof, updateStaffProof } = require('./staff-proof-id-service');
 const { createStaffSalaryAllocate, updateStaffSalaryAllocate } = require('./staff-salary-allocate-service');
 
-async function getStaff(query) {
+async function getStaff(query, auth) {
   try {
     let iql = "";
     let count = 0;
@@ -36,6 +36,12 @@ async function getStaff(query) {
         iql += ` st.is_active = ${query.isActive}`;
       }
     }
+    
+    if (auth.branch_id && auth.role_id === 3) {
+      iql += count >= 1 ? ` AND` : `WHERE`;
+      iql += ` st.branch_id = ${auth.branch_id}`;
+    }
+
     const result = await sequelize.query(`SELECT st.staff_id "staffId",CONCAT(sur.status_name,'.',st.first_name,' ',st.last_name) as staffName, st.staff_code "staffCode", st.contact_no "contactNo", st.branch_id "branchId", st.role_id "roleId", 
         st.department_id "departmentId",d.department_name "departmentName",r.role_name "roleName"
         FROM staffs st
@@ -161,11 +167,11 @@ async function getStaffDetails(query) {
     const result = {
       personalInfo: personalInfoData[0],
       jobRoleDetails: jobRoleDetails[0],
-      idProof : idProof,
-      workExperience : workExperience,
-      staffQualification : staffQualification,
-      staffDetails : staffDetails,
-      language :language
+      idProof: idProof,
+      workExperience: workExperience,
+      staffQualification: staffQualification,
+      staffDetails: staffDetails,
+      language: language
     }
     return result;
   } catch (error) {
@@ -244,49 +250,72 @@ async function createStaff(postData) {
   }
 }
 
+
+/////// naveen - 12-11-2024 ///////////////
 async function updateStaff(staffId, putData) {
   try {
     const personalInfoData = putData.personalInfoData
     const staffIdVal = personalInfoData.staffId
     //Staff Updation
-    const excuteMethod = _.mapKeys(personalInfoData, (value, key) => _.snakeCase(key))
-    const staffResult = await sequelize.models.staff.update(excuteMethod, { where: { staff_id: staffIdVal } });
+    const findstaff = await sequelize.models.staff.findOne({ where: { staff_id: staffIdVal } });
+    if (!findstaff) {
+      throw new Error("Staff record not found");
+    }
+    const userCreditial = putData?.jobRoleDetails?.userCreditial || false
 
-    //bank update
+    if (userCreditial) {
+      const userLogin = {
+        userName: putData.jobRoleDetails?.userName || "",
+        password: putData.jobRoleDetails?.password || "",
+      }
+      if (findstaff.user_id === null) {
+        //User Creation
+        const userResult = await createUser(userLogin)
+        personalInfoData.userId = userResult[0].userId
+      } else {
+        //User Updateion
+        await updateUser(findstaff.user_id, userLogin);
+      }
+    }
+
+    const excuteMethod = _.mapKeys(personalInfoData, (value, key) => _.snakeCase(key))
+    const staffResult = await findstaff.update(excuteMethod);
+
+    // Bank details update
     const BankDetails = putData.jobRoleDetails
-    const bankDetailsReq ={
-      bankName : BankDetails.bankName,
-      branchName : BankDetails.branchName,
-      accountHolderName : BankDetails.accountHolderName,
-      accountNo : BankDetails.accountNo,
-      ifscCode : BankDetails.ifscCode
-    } 
+    const bankDetailsReq = {
+      bankName: BankDetails.bankName,
+      branchName: BankDetails.branchName,
+      accountHolderName: BankDetails.accountHolderName,
+      accountNo: BankDetails.accountNo,
+      ifscCode: BankDetails.ifscCode
+    }
     console.log(bankDetailsReq)
     console.log(BankDetails.bankAccountId)
     const bankUpdateRes = await updateBankAccount(BankDetails.bankAccountId, bankDetailsReq)
 
     //job Salary Allocate Details
-    const jobRoleDetails = putData.jobRoleDetails 
+    const jobRoleDetails = putData.jobRoleDetails
     const salaryAllocateRes = await updateStaffSalaryAllocate(jobRoleDetails.staffSalaryAllocatedId, jobRoleDetails)
 
     // workExperience
-    const workExperience = putData.workExperience 
+    const workExperience = putData.workExperience
     const workExperienceRes = await updateStaffWorkExperience(staffId, workExperience)
 
     //language
-    const languageData = putData.language 
+    const languageData = putData.language
     const languageRes = await updateStaffKnownLanguage(staffId, languageData)
 
     //qualificationData
-    const qualificationData = putData.staffQualification 
+    const qualificationData = putData.staffQualification
     const qualificationRes = await updateStaffQualification(staffId, qualificationData)
 
     // Proof Details
-    const proofData = putData.idProof 
+    const proofData = putData.idProof
     const proofRes = await updateStaffProof(staffId, proofData)
 
     // Relation Details
-    const relationData = putData.staffDetails 
+    const relationData = putData.staffDetails
     const relationRes = await updateStaffRelation(staffId, relationData)
 
     const req = {
