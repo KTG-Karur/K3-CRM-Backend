@@ -24,5 +24,6 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require('./staff-proof-id-route'));
   fastify.register(require('./staff-relation-service'));
   fastify.register(require('./staff-leave-route'));
+  fastify.register(require('./staff-right-route'));
   next();
 };

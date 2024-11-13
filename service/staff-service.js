@@ -92,7 +92,7 @@ async function getStaffDetails(query) {
       st.role_id "roleId" , r.role_name "roleName",st.bank_account_id "bankAccountId",
       ba.account_holder_name "accountHolderName",ba.bank_name "bankName", ba.branch_name "branchName",
       ba.account_no "accountNo", ba.ifsc_code "ifscCode",
-      st.user_id "userId" ,ssa.staff_salary_allocated_id "staffSalaryAllocatedId", ssa.annual_amount "annualAmount", ssa.monthly_amount "monthlyAmount"
+      st.user_id "userId", st.user_id "userCreditial" ,ssa.staff_salary_allocated_id "staffSalaryAllocatedId", ssa.annual_amount "annualAmount", ssa.monthly_amount "monthlyAmount"
       FROM staffs st
       left join department d on d.department_id = st.department_id 
       left join designation d2 on d2.designation_id = st.designation_id 
