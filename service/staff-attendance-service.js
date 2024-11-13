@@ -42,21 +42,38 @@ async function getStaffAttendance(query) {
         }
       }
     }
+
     const result = await sequelize.query(
-      `SELECT ts.staff_attendance_id "staffAttendanceId",
+      `SELECT ts.staff_attendance_id "staffAttendanceId",       
       ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
       s.staff_code "staffCode",
       ts.attendance_status_id "attendanceStatusId",
-      ts.attendance_incharge_id	 "attendanceInchargeId",
+      ts.attendance_incharge_id  "attendanceInchargeId",
       ts.attendance_date "attendanceDate",
       b.branch_id "branchId",
-      b.branch_name "branchName", 
+      b.branch_name "branchName",
       d.department_id "departmentId",
       d.department_name "departmentName"
-      FROM staff_attendances ts
-      left join branches b on b.branch_id = ts.branch_id
-      left join department d on d.department_id = ts.department_id
-      left join staffs s on s.staff_id = ts.staff_id ${iql}`,
+      FROM staffs s
+      left join branches b on b.branch_id = s.branch_id
+      left join department d on d.department_id = s.department_id
+      left join staff_attendances ts on ts.staff_id = s.staff_id or ( ts.attendance_date is null and ts.staff_id is null )  ${iql}`,
+    
+    // const result = await sequelize.query(
+    //   `SELECT ts.staff_attendance_id "staffAttendanceId",
+    //   ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
+    //   s.staff_code "staffCode",
+    //   ts.attendance_status_id "attendanceStatusId",
+    //   ts.attendance_incharge_id	 "attendanceInchargeId",
+    //   ts.attendance_date "attendanceDate",
+    //   b.branch_id "branchId",
+    //   b.branch_name "branchName", 
+    //   d.department_id "departmentId",
+    //   d.department_name "departmentName"
+    //   FROM staff_attendances ts
+    //   left join branches b on b.branch_id = ts.branch_id
+    //   left join department d on d.department_id = ts.department_id
+    //   left join staffs s on s.staff_id = ts.staff_id ${iql}`,
       {
         type: QueryTypes.SELECT,
         raw: true,
