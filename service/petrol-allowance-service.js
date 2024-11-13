@@ -5,7 +5,7 @@ const messages = require("../helpers/message");
 const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 
-async function getPetrolAllowance(query) {
+async function getPetrolAllowance(query, auth) {
   try {
     let iql = "";
     let count = 0;
@@ -36,6 +36,11 @@ async function getPetrolAllowance(query) {
         count++;
         iql += ` pa.is_active = ${query.isActive}`;
       }
+    }
+
+    if (auth.branch_id && auth.role_id === 3) {
+      iql += count >= 1 ? ` AND` : `WHERE`;
+      iql += ` s.branch_id = ${auth.branch_id}`;
     }
 
     const result = await sequelize.query(`SELECT pa.petrol_allowance_id "petrolAllowanceId", pa.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,

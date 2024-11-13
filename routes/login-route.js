@@ -14,8 +14,8 @@ async function getEmployeeLogin(req, res) {
   const responseEntries = new ResponseEntry();
   try {
     responseEntries.data = await loginServices.getEmployeeLogin(req.query);
-    const data  = req.query
-    const token = fastify.jwt.sign({email : data.email})
+    const data = req.query
+    const token = fastify.jwt.sign({ email: data.email })
     responseEntries.token = token
     if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
   } catch (error) {
@@ -30,58 +30,65 @@ async function getEmployeeLogin(req, res) {
 
 async function getUserLogin(req, res) {
   const responseEntries = new ResponseEntry();
+  responseEntries.data = {};
   try {
-    responseEntries.data = await loginServices.getUserLogin(req.query);
-    const data  = req.query
-    const token = fastify.jwt.sign({email : data.userName})
-    responseEntries.token = token
-    if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
+    const userDetails = await loginServices.getUserLogin(req.query);
+    responseEntries.data.userDetails = userDetails;
+    const token = fastify.jwt.sign(
+      { user_id: userDetails.user_id },
+      { expiresIn: "1d" }
+    );
+    responseEntries.data.token = token;
+    if (!responseEntries.data.userDetails) {
+      responseEntries.message = messages.DATA_NOT_FOUND;
+    }
   } catch (error) {
     responseEntries.error = true;
     responseEntries.message = error.message;
     responseEntries.code = responseCode.UNAUTHORIZED;
-    responseEntries.token = null
+    responseEntries.data = null;
   } finally {
     res.send(responseEntries);
   }
 }
 
-function getEmployee(req, res){
-    console.log("login---<>"+req)
-    const email = "vensrini0414@gmail.com"
-    // const token = fastify.jwt.sign({email : email}, { expiresIn: '1h' })
-    const token = fastify.jwt.sign({email : email}, { expiresIn: '1h' })
-    res.send({ hello: 'world',token : token })
+
+function getEmployee(req, res) {
+  console.log("login---<>" + req)
+  const email = "vensrini0414@gmail.com"
+  // const token = fastify.jwt.sign({email : email}, { expiresIn: '1h' })
+  const token = fastify.jwt.sign({ email: email }, { expiresIn: '1h' })
+  res.send({ hello: 'world', token: token })
 }
 
-function createEmployee(req, res){
-  res.send({ hello: 'world'})
+function createEmployee(req, res) {
+  res.send({ hello: 'world' })
 }
 
 
 module.exports = async function (fastify) {
-    fastify.route({
-      method: 'GET',
-      url: '/login',
-      handler: getEmployee
-    });
+  fastify.route({
+    method: 'GET',
+    url: '/login',
+    handler: getEmployee
+  });
 
-    fastify.route({
-      method: 'GET',
-      url: '/user-login',
-      handler: getUserLogin
-    });
+  fastify.route({
+    method: 'GET',
+    url: '/user-login',
+    handler: getUserLogin
+  });
 
-    fastify.route({
-      method: 'GET',
-      url: '/organization-login',
-      handler: getEmployeeLogin
-    });
-  
-    fastify.route({
-      method: 'POST',
-      url: '/login',
-      preHandler: verifyToken,
-      handler: createEmployee
-    });
-  };
+  fastify.route({
+    method: 'GET',
+    url: '/organization-login',
+    handler: getEmployeeLogin
+  });
+
+  fastify.route({
+    method: 'POST',
+    url: '/login',
+    preHandler: verifyToken,
+    handler: createEmployee
+  });
+};

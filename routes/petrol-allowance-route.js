@@ -21,7 +21,7 @@ const schema = {
 async function getPetrolAllowance(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await petrolAllowanceServices.getPetrolAllowance(req.query);
+        responseEntries.data = await petrolAllowanceServices.getPetrolAllowance(req.query, req.auth);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;

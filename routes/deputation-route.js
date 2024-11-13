@@ -21,7 +21,7 @@ const schema = {
 async function getDeputation(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await deputationServices.getDeputation(req.query);
+        responseEntries.data = await deputationServices.getDeputation(req.query, req.auth);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;

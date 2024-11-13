@@ -5,7 +5,7 @@ const messages = require("../helpers/message");
 const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 
-async function getClaim(query) {
+async function getClaim(query, auth) {
   try {
     let iql = "";
     let count = 0;
@@ -37,6 +37,12 @@ async function getClaim(query) {
         iql += ` DATE(c.approved_date) = '${query.approvedDate}'`;
       }
     }
+
+    if (auth.branch_id && auth.role_id === 3) {
+      iql += count >= 1 ? ` AND` : `WHERE`;
+      iql += ` c.branch_id = ${auth.branch_id}`;
+    }
+
     const result = await sequelize.query(`SELECT c.claim_id "claimId", c.claim_type_id "claimTypeId",ct.claim_type_name "claimTypeName",
         c.requested_by "requestedById",CONCAT(s.first_name,' ',s.last_name) as requestedBy,
         c.requested_amount "requestedAmount", c.reason, c.branch_id "branchId",b.branch_name "branchName",

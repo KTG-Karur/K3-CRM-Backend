@@ -15,7 +15,7 @@ const schema = {
 async function getStaff(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await staffServices.getStaff(req.query);
+        responseEntries.data = await staffServices.getStaff(req.query, req.auth);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;

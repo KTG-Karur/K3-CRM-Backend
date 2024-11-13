@@ -55,43 +55,61 @@ async function getEmployeeLogin(query) {
 async function getUserLogin(query) {
     try {
         let iql = "";
+        let replacements = [];
         let count = 0;
+        
         if (query && Object.keys(query).length) {
             iql += `WHERE`;
             if (query.userName) {
                 iql += count >= 1 ? ` AND` : ``;
                 count++;
-                iql += ` u.user_name = '${query.userName}'`;
+                iql += ` u.user_name = ?`;
+                replacements.push(query.userName);
             }
             if (query.isActive) {
                 iql += count >= 1 ? ` AND` : ``;
                 count++;
-                iql += ` u.is_active = ${query.isActive}`;
+                iql += ` u.is_active = ?`;
+                replacements.push(query.isActive);
             }
         }
-        const result = await sequelize.query(`SELECT a.applicant_id "applicantId", a.applicant_code "applicantCode",
-            CONCAT(a.first_name,' ',a.last_name) as userName,a.contact_no "contactNo",
-            a.user_id "userId",u.password "password"
-            FROM applicants a
-            left join users u on u.user_id = a.user_id  ${iql}`, {
+
+        const result = await sequelize.query(`SELECT 
+            s.*, 
+            r.role_name AS role_name, 
+            u.password AS password
+            FROM staffs s
+            LEFT JOIN 
+            users u ON u.user_id = s.user_id 
+            LEFT JOIN 
+            role r ON r.role_id = s.role_id  
+            ${iql}`, {
             type: QueryTypes.SELECT,
             raw: true,
-            nest: false
+            replacements
         });
-        if(result.length > 0){
-            const decrptPasswordData = await decrptPassword(result[0].password)
-            console.log(decrptPasswordData)
-            if(decrptPasswordData === query.password){
-                return result;
-            }else{
-                throw new Error(messages.INCORRECT_PASSWORD);
-            }
-        }else{
+
+        if (result.length === 0) {
             throw new Error(messages.INVALID_USER);
         }
-      
+
+        const existingRight = await sequelize.query(
+            `SELECT staff_right_permission FROM staff_rights WHERE staff_id = ?`,
+            { replacements: [result[0].staff_id], type: QueryTypes.SELECT }
+        );
+        
+        if (existingRight.length > 0) {
+            result[0].userRights = JSON.parse(existingRight[0].staff_right_permission);
+        }
+
+        const decryptedPassword = await decrptPassword(result[0].password);
+        if (decryptedPassword === query.password) {
+            return result[0];
+        } else {
+            throw new Error(messages.INCORRECT_PASSWORD);
+        }
     } catch (error) {
-        throw new Error(error);
+        throw new Error(`Error in getUserLogin: ${error.message}`);
     }
 }
 

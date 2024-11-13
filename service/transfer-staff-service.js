@@ -6,7 +6,7 @@ const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 const { generateSerialNumber } = require('../utils/utility');
 
-async function getTransferStaff(query) {
+async function getTransferStaff(query, auth) {
   try {
     let iql = "";
     let count = 0;
@@ -23,6 +23,12 @@ async function getTransferStaff(query) {
         iql += ` s.staff_id = ${query.staffId}`;
       }
     }
+
+    if (auth.branch_id && auth.role_id === 3) {
+      iql += count >= 1 ? ` AND` : `WHERE`;
+      iql += ` s.branch_id = ${auth.branch_id}`;
+    }
+
     const result = await sequelize.query(`SELECT ts.transfer_staff_id "transferStaffId",
       ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
       ts.transfer_code "transferCode", ts.transfer_date "transferDate",

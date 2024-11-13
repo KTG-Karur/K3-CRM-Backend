@@ -21,7 +21,7 @@ const schema = {
 async function getTransferStaff(req, res) {
     const responseEntries = new ResponseEntry();
     try {
-        responseEntries.data = await transferStaffServices.getTransferStaff(req.query);
+        responseEntries.data = await transferStaffServices.getTransferStaff(req.query, req.auth);
         if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     } catch (error) {
         responseEntries.error = true;
