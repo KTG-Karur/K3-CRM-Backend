@@ -25,15 +25,27 @@ async function getStaff(query) {
         count++;
         iql += ` st.staff_id = ${query.staffId}`;
       }
-      if (query.departmentId) {
-        iql += count >= 1 ? ` AND` : ``;
-        count++;
-        iql += ` st.department_id = ${query.departmentId}`;
+      if (query.branchId || query.branchId == '') {
+        if (query.branchId !== '') {
+          iql += count >= 1 ? ` AND` : ``;
+          count++;
+          iql += ` st.branch_id = ${query.branchId}`;
+        }
+
+        if (query.branchId == '' && query?.departmentId == '') {
+          iql = ''
+        }
       }
-      if (query.branchId) {
-        iql += count >= 1 ? ` AND` : ``;
-        count++;
-        iql += ` st.branch_id = ${query.branchId}`;
+      if (query.departmentId || query.departmentId == '') {
+        if (query.departmentId !== '') {
+          iql += count >= 1 ? ` AND` : ``;
+          count++;
+          iql += ` st.department_id = ${query.departmentId}`;
+        }
+
+        if (query?.branchId == '' && query.departmentId == '') {
+          iql = ''
+        }
       }
       if (query.isActive) {
         iql += count >= 1 ? ` AND` : ``;
@@ -41,6 +53,10 @@ async function getStaff(query) {
         iql += ` st.is_active = ${query.isActive}`;
       }
     }
+    console.log("query")
+    console.log(query)
+    console.log("sql")
+    console.log(iql)
     const result = await sequelize.query(`SELECT st.staff_id "staffId",CONCAT(sur.status_name,'.',st.first_name,' ',st.last_name) as staffName, st.staff_code "staffCode", st.contact_no "contactNo", st.branch_id "branchId", st.role_id "roleId", 
         st.department_id "departmentId",d.department_name "departmentName",r.role_name "roleName"
         FROM staffs st

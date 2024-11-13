@@ -27,6 +27,20 @@ async function getStaffAttendance(query) {
         count++;
         iql += ` ts.attendance_date = '${query.attendanceDate}'`;
       }
+      if (query.branchId || query.branchId == '') {
+        if (query.branchId !== '') {
+          iql += count >= 1 ? ` AND` : ``;
+          count++;
+          iql += ` ts.branch_id = ${query.branchId}`;
+        }
+      }
+      if (query.departmentId || query.departmentId == '') {
+        if (query.departmentId !== '') {
+          iql += count >= 1 ? ` AND` : ``;
+          count++;
+          iql += ` ts.department_id = ${query.departmentId}`;
+        }
+      }
     }
     const result = await sequelize.query(
       `SELECT ts.staff_attendance_id "staffAttendanceId",
