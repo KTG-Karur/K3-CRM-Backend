@@ -30,6 +30,11 @@ async function getStaff(query) {
         count++;
         iql += ` st.department_id = ${query.departmentId}`;
       }
+      if (query.branchId) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` st.branch_id = ${query.branchId}`;
+      }
       if (query.isActive) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
