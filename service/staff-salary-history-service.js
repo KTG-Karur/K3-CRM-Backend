@@ -45,7 +45,9 @@ async function getStaffSalaryHistory(query) {
     ssa.esi_amount AS ssaEsiAmount,  
     ssa.pf_amount AS ssaPfAmount,  
     SUM(sl.day_count) AS leaveCount, 
-    ts.createdAt
+    ts.createdAt,
+    YEAR(ts.salary_date) AS salaryYear,
+    MONTH(ts.salary_date) AS salaryMonth
 FROM 
     staffs s
 LEFT JOIN 
@@ -60,10 +62,12 @@ LEFT JOIN
     staff_salary_histories ts ON ts.staff_id = s.staff_id
    
     ${iql} GROUP BY 
-    s.staff_id
+    s.staff_id, 
+    YEAR(ts.salary_date), 
+    MONTH(ts.salary_date)
 
 ORDER BY 
-    s.staff_id `, {
+    s.staff_id, salaryYear, salaryMonth`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
