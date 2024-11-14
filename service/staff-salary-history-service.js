@@ -22,17 +22,25 @@ async function getStaffSalaryHistory(query) {
         count++;
         iql += ` s.staff_id = ${query.staffId}`;
       }
+      if (query.salaryDate) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` ts.salary_date = ${query.salaryDate}`;
+      }
     }
     const result = await sequelize.query(`SELECT ts.staff_salary_history_id "staffSalaryHistoryId",
-      ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
+      s.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
       ts.salary_amount "salaryAmount", ts.salary_date "salaryDate",
       ts.deduction_amount "deductionAmount", ts.esi_amount "esiAmount",
       ts.pf_amount "pfAmount", ts.incentive "incentive",
-      ts.total_salary_amount "totalSalaryAmount",b.branch_name as branchName,
+      ts.total_salary_amount "totalSalaryAmount",b.branch_name as branchName,ssa.annual_amount as annualAmount,ssa.monthly_amount as monthlyAmount,ssa.esi_amount as esiAmount,ssa.pf_amount as pfAmount,
       ts.createdAt
-      FROM staff_salary_histories ts
-      left join branches b on b.branch_id = ts.branch_id
-      left join staffs s on s.staff_id = ts.staff_id32 ${iql}`, {
+      FROM staffs s
+      left join branches b on b.branch_id = s.branch_id
+      left join staff_leaves sl on sl.staff_id = s.staff_id
+      left join staff_attendances sa on sa.staff_id = s.staff_id
+      left join staff_salary_allocateds ssa on ssa.staff_id = s.staff_id
+      left join staff_salary_histories ts on ts.staff_id = s.staff_id  ${iql} group by s.staff_id`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
@@ -45,13 +53,6 @@ async function getStaffSalaryHistory(query) {
 
 async function createStaffSalaryHistory(postData) {
   try {
-
-    const countResult = await sequelize.query(`SELECT ts.transfer_code "transferCode"
-      FROM staff_salary_history ts ORDER BY ts.staff_salary_history_id DESC LIMIT 1`, {
-      type: QueryTypes.SELECT,
-      raw: true,
-      nest: false
-    });    
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
     const staffSalaryHistoryResult = await sequelize.models.staff_salary_history.create(excuteMethod);
