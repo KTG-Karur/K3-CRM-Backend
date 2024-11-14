@@ -28,19 +28,42 @@ async function getStaffSalaryHistory(query) {
         iql += ` ts.salary_date = ${query.salaryDate}`;
       }
     }
-    const result = await sequelize.query(`SELECT ts.staff_salary_history_id "staffSalaryHistoryId",
-      s.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
-      ts.salary_amount "salaryAmount", ts.salary_date "salaryDate",
-      ts.deduction_amount "deductionAmount", ts.esi_amount "esiAmount",
-      ts.pf_amount "pfAmount", ts.incentive "incentive",
-      ts.total_salary_amount "totalSalaryAmount",b.branch_name as branchName,ssa.annual_amount as annualAmount,ssa.monthly_amount as monthlyAmount,ssa.esi_amount as esiAmount,ssa.pf_amount as pfAmount,
-      ts.createdAt
-      FROM staffs s
-      left join branches b on b.branch_id = s.branch_id
-      left join staff_leaves sl on sl.staff_id = s.staff_id
-      left join staff_attendances sa on sa.staff_id = s.staff_id
-      left join staff_salary_allocateds ssa on ssa.staff_id = s.staff_id
-      left join staff_salary_histories ts on ts.staff_id = s.staff_id  ${iql} group by s.staff_id`, {
+    const result = await sequelize.query(`SELECT 
+    ts.staff_salary_history_id AS staffSalaryHistoryId, 
+    s.staff_id AS staffId,
+    CONCAT(s.first_name, ' ', s.last_name) AS staffName, 
+    ts.salary_amount AS salaryAmount, 
+    ts.salary_date AS salaryDate, 
+    ts.deduction_amount AS deductionAmount, 
+    ts.esi_amount AS esiAmount,
+    ts.pf_amount AS pfAmount, 
+    ts.incentive AS incentive, 
+    ts.total_salary_amount AS totalSalaryAmount,
+    b.branch_name AS branchName,
+    ssa.annual_amount AS annualAmount, 
+    ssa.monthly_amount AS monthlyAmount,
+    ssa.esi_amount AS ssaEsiAmount,  
+    ssa.pf_amount AS ssaPfAmount,  
+    SUM(sl.day_count) AS leaveCount, 
+    ts.createdAt
+FROM 
+    staffs s
+LEFT JOIN 
+    branches b ON b.branch_id = s.branch_id
+LEFT JOIN 
+    staff_leaves sl ON sl.staff_id = s.staff_id  
+LEFT JOIN 
+    staff_attendances sa ON sa.staff_id = s.staff_id
+LEFT JOIN 
+    staff_salary_allocateds ssa ON ssa.staff_id = s.staff_id
+LEFT JOIN 
+    staff_salary_histories ts ON ts.staff_id = s.staff_id
+   
+    ${iql} GROUP BY 
+    s.staff_id
+
+ORDER BY 
+    s.staff_id `, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
