@@ -24,7 +24,7 @@ async function getStaffAdvance(query, auth) {
       }
     }
 
-    if (auth.branch_id && auth.role_id === 3) {
+    if (auth?.branch_id && auth?.role_id === 3) {
       iql += count >= 1 ? ` AND` : `WHERE`;
       iql += ` s.branch_id = ${auth.branch_id}`;
     }
@@ -38,11 +38,13 @@ async function getStaffAdvance(query, auth) {
       FROM staff_advances ts
       left join staffs s on s.staff_id = ts.staff_id 
       left join staffs s2 on s2.staff_id = ts.approved_by
-      left join advance_payment_histories ph on ph.staff_advance_id = ts.staff_advance_id GROUP BY ts.staff_advance_id  ${iql}`, {
+      left join advance_payment_histories ph on ph.staff_advance_id = ts.staff_advance_id  ${iql} GROUP BY ts.staff_advance_id`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
     });
+    console.log("result")
+    console.log(result)
     return result;
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
@@ -50,10 +52,10 @@ async function getStaffAdvance(query, auth) {
 }
 
 async function createStaffAdvance(postData) {
-  try {       
+  try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
     const staffAdvanceResult = await sequelize.models.staff_advance.create(excuteMethod);
-    
+
     const req = {
       staffAdvanceId: staffAdvanceResult.staff_advance_id
     }
@@ -64,7 +66,7 @@ async function createStaffAdvance(postData) {
 }
 
 async function updateStaffAdvance(staffAdvanceId, putData) {
-  try {   
+  try {
 
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
     const staffAdvanceResult = await sequelize.models.staff_advance.update(excuteMethod, { where: { staff_advance_id: staffAdvanceId } });
