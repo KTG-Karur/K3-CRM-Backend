@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     staff_id: DataTypes.INTEGER,
+    branch_id: DataTypes.INTEGER,
     apply_date: DataTypes.DATE,
     approved_date: DataTypes.DATE,
     approved_by: DataTypes.INTEGER,
