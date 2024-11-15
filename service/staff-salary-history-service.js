@@ -44,10 +44,10 @@ async function getStaffSalaryHistory(query) {
     ssa.monthly_amount AS monthlyAmount,
     ssa.esi_amount AS ssaEsiAmount,  
     ssa.pf_amount AS ssaPfAmount,  
-    SUM(sl.day_count) AS leaveCount, 
-    ts.createdAt,
-    YEAR(ts.salary_date) AS salaryYear,
-    MONTH(ts.salary_date) AS salaryMonth
+    SUM(sl.day_count) AS leaveCount,
+    SUM(saa.amount) AS advanceAmount,
+    SUM(saa.paid_amount) AS paidAdvanceAmount,
+    ts.createdAt
 FROM 
     staffs s
 LEFT JOIN 
@@ -60,6 +60,8 @@ LEFT JOIN
     staff_salary_allocateds ssa ON ssa.staff_id = s.staff_id
 LEFT JOIN 
     staff_salary_histories ts ON ts.staff_id = s.staff_id
+LEFT JOIN 
+    staff_advances saa ON saa.staff_id = s.staff_id
    
     ${iql} GROUP BY 
     s.staff_id, 
@@ -67,7 +69,7 @@ LEFT JOIN
     MONTH(ts.salary_date)
 
 ORDER BY 
-    s.staff_id, salaryYear, salaryMonth`, {
+    s.staff_id`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
