@@ -23,7 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     designation_name: DataTypes.STRING,
     department_id: DataTypes.INTEGER,
-    is_active: DataTypes.BOOLEAN
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'designation',

@@ -18,6 +18,11 @@ module.exports = {
       leave_count_day: {
         type: Sequelize.STRING
       },
+      is_active: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: 1
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

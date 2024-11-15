@@ -21,7 +21,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     leave_deduction_percentage: DataTypes.STRING,
     leave_type_id: DataTypes.STRING,
-    leave_count_day: DataTypes.STRING
+    leave_count_day: DataTypes.STRING,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'setting_leave_deduction',

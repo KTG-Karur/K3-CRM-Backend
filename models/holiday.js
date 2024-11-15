@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     holiday_date: DataTypes.DATE,
-    reason: DataTypes.STRING
+    reason: DataTypes.STRING,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'holiday',

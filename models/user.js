@@ -21,7 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_name: DataTypes.STRING,
     password: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'user',

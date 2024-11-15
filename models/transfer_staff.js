@@ -24,7 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     transfer_date: DataTypes.DATE,
     transfer_from: DataTypes.STRING,
     transfer_to: DataTypes.STRING,
-    transfered_by: DataTypes.INTEGER
+    transfered_by: DataTypes.INTEGER,
+    branch_id: DataTypes.INTEGER,
+    status_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 28,
+    },
   }, {
     sequelize,
     modelName: 'transfer_staff',

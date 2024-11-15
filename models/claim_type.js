@@ -20,7 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     claim_type_name: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'claim_type',

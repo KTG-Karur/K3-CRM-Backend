@@ -28,7 +28,14 @@ module.exports = (sequelize, DataTypes) => {
     reason: DataTypes.STRING,
     paid_amount: DataTypes.STRING,
     balance_amount: DataTypes.STRING,
-    advance_status: DataTypes.INTEGER
+    status_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 28,
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'staff_advance',

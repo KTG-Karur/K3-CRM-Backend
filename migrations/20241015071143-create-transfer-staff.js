@@ -27,6 +27,11 @@ module.exports = {
       transfered_by: {
         type: Sequelize.INTEGER
       },
+      status_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 28
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

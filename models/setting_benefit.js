@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     benefit_percentage: DataTypes.STRING,
-    benefit_name: DataTypes.STRING
+    benefit_name: DataTypes.STRING,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'setting_benefit',

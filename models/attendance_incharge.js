@@ -21,7 +21,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     department_id: DataTypes.INTEGER,
     staff_id: DataTypes.INTEGER,
-    branch_id: DataTypes.INTEGER
+    branch_id: DataTypes.INTEGER,
+    status_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 28,
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'attendance_incharge',

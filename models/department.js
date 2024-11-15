@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      
+
     }
   }
   department.init({
@@ -20,11 +20,14 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     department_name: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'department',
-    tableName : 'department',
+    tableName: 'department',
   });
   return department;
 };

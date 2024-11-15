@@ -43,8 +43,10 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE
       },
-      is_active: {
-        type: Sequelize.INTEGER
+      status_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 28
       }
     });
   },

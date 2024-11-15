@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
       from_date: DataTypes.DATE,
       to_date: DataTypes.DATE,
       approved_by: DataTypes.INTEGER,
-      leave_status_id: {
+      branch_id: DataTypes.INTEGER,
+      status_id: {
         type: DataTypes.INTEGER,
         defaultValue: 28,
       },

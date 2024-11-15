@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   advance_payment_history.init({
-    advance_payment_history_id:{
+    advance_payment_history_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
@@ -23,7 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     paid_amount: DataTypes.STRING,
     balance_amount: DataTypes.STRING,
     paid_date: DataTypes.DATE,
-    paid_to: DataTypes.INTEGER
+    paid_to: DataTypes.INTEGER,
+    branch_id: DataTypes.INTEGER,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'advance_payment_history',

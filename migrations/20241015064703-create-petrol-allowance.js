@@ -36,6 +36,14 @@ module.exports = {
       bill_image_name: {
         type: Sequelize.STRING
       },
+      bill_image_name: {
+        type: Sequelize.STRING
+      },
+      status_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 28
+      },
       is_active: {
         allowNull: false,
         type: Sequelize.BOOLEAN,

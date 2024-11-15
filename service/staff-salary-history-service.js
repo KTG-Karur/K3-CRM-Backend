@@ -25,9 +25,21 @@ async function getStaffSalaryHistory(query) {
       if (query.salaryDate) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
-        iql += ` ts.salary_date = ${query.salaryDate}`;
+        // iql += ` ts.salary_date = `;
+        iql += `(YEAR(ts.salary_date) =${query.salaryDate} AND  MONTH(ts.salary_date)  =${query.salaryDate}) OR (ts.salary_date is NULL)`;
+      }
+      if (query.branchId) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` s.branch_id = ${query.branchId}`;
+      }
+      if (query.departmentId) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` s.department_id = ${query.departmentId}`;
       }
     }
+
     const result = await sequelize.query(`SELECT 
     ts.staff_salary_history_id AS staffSalaryHistoryId, 
     s.staff_id AS staffId,
@@ -62,7 +74,7 @@ LEFT JOIN
     staff_salary_histories ts ON ts.staff_id = s.staff_id
 LEFT JOIN 
     staff_advances saa ON saa.staff_id = s.staff_id
-   
+
     ${iql} GROUP BY 
     s.staff_id, 
     YEAR(ts.salary_date), 

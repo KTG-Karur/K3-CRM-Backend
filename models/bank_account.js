@@ -25,8 +25,11 @@ module.exports = (sequelize, DataTypes) => {
     account_no: DataTypes.STRING,
     ifsc_code: DataTypes.STRING,
     transaction_id: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN,
-    company_account: DataTypes.BOOLEAN
+    company_account: DataTypes.BOOLEAN,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'bank_account',
