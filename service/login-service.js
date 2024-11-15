@@ -60,11 +60,11 @@ async function getUserLogin(query) {
         
         if (query && Object.keys(query).length) {
             iql += `WHERE`;
-            if (query.userName) {
+            if (query.username) {
                 iql += count >= 1 ? ` AND` : ``;
                 count++;
                 iql += ` u.user_name = ?`;
-                replacements.push(query.userName);
+                replacements.push(query.username);
             }
             if (query.isActive) {
                 iql += count >= 1 ? ` AND` : ``;

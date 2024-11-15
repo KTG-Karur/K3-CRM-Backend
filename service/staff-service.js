@@ -62,9 +62,9 @@ async function getStaff(query, auth) {
     const result = await sequelize.query(`SELECT st.staff_id "staffId",CONCAT(sur.status_name,'.',st.first_name,' ',st.last_name) as staffName, st.staff_code "staffCode", st.contact_no "contactNo", st.branch_id "branchId", st.role_id "roleId", 
         st.department_id "departmentId",d.department_name "departmentName",r.role_name "roleName"
         FROM staffs st
-        left join department d on d.department_id = st.department_id 
-        left join status_lists sur on sur.status_list_id = st.surname_id
-        left join role r on r.role_id = st.role_id  ${iql}`, {
+        left join department d on d.department_id = st.department_id and st.role_id != '1'
+        left join status_lists sur on sur.status_list_id = st.surname_id and st.role_id != '1'
+        left join role r on r.role_id = st.role_id and st.role_id != '1'  ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
@@ -109,11 +109,7 @@ async function getStaffDetails(query) {
       st.role_id "roleId" , r.role_name "roleName",st.bank_account_id "bankAccountId",
       ba.account_holder_name "accountHolderName",ba.bank_name "bankName", ba.branch_name "branchName",
       ba.account_no "accountNo", ba.ifsc_code "ifscCode",
-<<<<<<< HEAD
-      st.user_id "userId", st.user_id "userCreditial"  ,u.user_name "userName",u.password "password", ssa.staff_salary_allocated_id "staffSalaryAllocatedId", ssa.annual_amount "annualAmount", ssa.monthly_amount "monthlyAmount"
-=======
-      st.user_id "userId", st.user_id "userCreditial" ,ssa.staff_salary_allocated_id "staffSalaryAllocatedId", ssa.annual_amount "annualAmount", ssa.monthly_amount "monthlyAmount"
->>>>>>> 0abace6333935cbb15c1e226ff0059d7b6bd92da
+      st.user_id "userId", st.user_id "userCreditial", u.user_name "userName", u.password "password", ssa.staff_salary_allocated_id "staffSalaryAllocatedId", ssa.annual_amount "annualAmount", ssa.monthly_amount "monthlyAmount"
       FROM staffs st
       left join department d on d.department_id = st.department_id 
       left join users u on u.user_id = st.user_id 
