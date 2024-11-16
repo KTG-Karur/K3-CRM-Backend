@@ -4,6 +4,7 @@ const Fastify = require('fastify');
 const fastifyJWT = require('@fastify/jwt');
 const routesPlugin = require('./routes');
 const helmet = require('@fastify/helmet');
+const path = require('path');
 
 const fastify = Fastify();
 //Swagger Docs---->
@@ -45,5 +46,10 @@ fastify.register(fastifyJWT, {
 fastify.register(helmet);
 //ROUTE----->
 fastify.register(routesPlugin);
+
+fastify.register(require('@fastify/static'), {
+    root: path.join(__dirname, 'uploads'),
+    prefix: '/uploads/', // optional: adds a prefix to all served files
+});
 
 module.exports = fastify;
