@@ -40,10 +40,10 @@ async function getEmployeeLogin(query) {
         const decrptPasswordData = await decrptPassword(result[0].password)
         console.log(decrptPasswordData)
         console.log(query.password)
-        if(decrptPasswordData === query.password){
+        if (decrptPasswordData === query.password) {
             console.log("in---->")
             return result;
-        }else{
+        } else {
             console.log("entered--->")
             throw new Error(messages.INCORRECT_PASSWORD);
         }
@@ -57,24 +57,43 @@ async function getUserLogin(query) {
         let iql = "";
         let replacements = [];
         let count = 0;
-        
-        if (query && Object.keys(query).length) {
-            iql += `WHERE`;
-            if (query.username) {
-                iql += count >= 1 ? ` AND` : ``;
-                count++;
-                iql += ` u.user_name = ?`;
-                replacements.push(query.username);
-            }
-            if (query.isActive) {
-                iql += count >= 1 ? ` AND` : ``;
-                count++;
-                iql += ` u.is_active = ?`;
-                replacements.push(query.isActive);
-            }
+
+        if (!query.username && !query.password) {
+            throw new Error('Username and password must be provided');
         }
 
-        const result = await sequelize.query(`SELECT 
+        const resultAdmin = await sequelize.query(`
+            SELECT 
+            a.*, 
+            r.role_name AS role_name
+            FROM admin a
+            LEFT JOIN 
+            role r ON r.role_id = a.role_id 
+            WHERE a.user_name = ?    
+            `, {
+            type: QueryTypes.SELECT,
+            raw: true,
+            replacements: [query.username]
+        });
+        
+        if (resultAdmin.length === 0) {
+            if (query && Object.keys(query).length) {
+                iql += `WHERE`;
+                if (query.username) {
+                    iql += count >= 1 ? ` AND` : ``;
+                    count++;
+                    iql += ` u.user_name = ?`;
+                    replacements.push(query.username);
+                }
+                if (query.isActive) {
+                    iql += count >= 1 ? ` AND` : ``;
+                    count++;
+                    iql += ` u.is_active = ?`;
+                    replacements.push(query.isActive);
+                }
+            }
+
+            const result = await sequelize.query(`SELECT 
             s.*, 
             r.role_name AS role_name, 
             u.password AS password
@@ -84,29 +103,37 @@ async function getUserLogin(query) {
             LEFT JOIN 
             role r ON r.role_id = s.role_id  
             ${iql}`, {
-            type: QueryTypes.SELECT,
-            raw: true,
-            replacements
-        });
+                type: QueryTypes.SELECT,
+                raw: true,
+                replacements
+            });
 
-        if (result.length === 0) {
-            throw new Error(messages.INVALID_USER);
-        }
+            if (result.length === 0) {
+                throw new Error(messages.INVALID_USER);
+            }
 
-        const existingRight = await sequelize.query(
-            `SELECT staff_right_permission FROM staff_rights WHERE staff_id = ?`,
-            { replacements: [result[0].staff_id], type: QueryTypes.SELECT }
-        );
-        
-        if (existingRight.length > 0) {
-            result[0].userRights = JSON.parse(existingRight[0].staff_right_permission);
-        }
+            const existingRight = await sequelize.query(
+                `SELECT staff_right_permission FROM staff_rights WHERE staff_id = ?`,
+                { replacements: [result[0].staff_id], type: QueryTypes.SELECT }
+            );
 
-        const decryptedPassword = await decrptPassword(result[0].password);
-        if (decryptedPassword === query.password) {
-            return result[0];
+            if (existingRight.length > 0) {
+                result[0].userRights = JSON.parse(existingRight[0].staff_right_permission);
+            }
+
+            const decryptedPassword = await decrptPassword(result[0].password);
+            if (decryptedPassword === query.password) {
+                return result[0];
+            } else {
+                throw new Error(messages.INCORRECT_PASSWORD);
+            }
         } else {
-            throw new Error(messages.INCORRECT_PASSWORD);
+            const decryptedPassword = await decrptPassword(resultAdmin[0].password);
+            if (decryptedPassword === query.password) {
+                return resultAdmin[0];
+            } else {
+                throw new Error(messages.INCORRECT_PASSWORD);
+            }
         }
     } catch (error) {
         throw new Error(`Error in getUserLogin: ${error.message}`);
