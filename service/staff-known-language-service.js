@@ -37,7 +37,6 @@ async function createStaffKnownLanguage(postData) {
     const staffKnownLanguageResult = await sequelize.models.staff_known_language.bulkCreate(excuteMethod);
     return true;
   } catch (error) {
-    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

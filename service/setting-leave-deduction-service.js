@@ -38,7 +38,6 @@ async function createSettingLeaveDeduction(postData) {
     }
     return await getSettingLeaveDeduction(req);
   } catch (error) {
-    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

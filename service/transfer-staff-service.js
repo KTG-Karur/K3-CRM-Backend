@@ -76,7 +76,6 @@ async function createTransferStaff(postData) {
     }
     return await getTransferStaff(req);
   } catch (error) {
-    console.log(error)
     throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

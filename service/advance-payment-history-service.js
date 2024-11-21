@@ -46,7 +46,6 @@ async function createAdvancePaymentHistory(postData) {
     }
     return await getAdvancePaymentHistory(req);
   } catch (error) {
-    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

@@ -53,10 +53,6 @@ async function getStaff(query) {
         iql += ` st.is_active = ${query.isActive}`;
       }
     }
-    console.log("query")
-    console.log(query)
-    console.log("sql")
-    console.log(iql)
     const result = await sequelize.query(`SELECT st.staff_id "staffId",CONCAT(sur.status_name,'.',st.first_name,' ',st.last_name) as staffName, st.staff_code "staffCode", st.contact_no "contactNo", st.branch_id "branchId", st.role_id "roleId", 
         st.department_id "departmentId",d.department_name "departmentName",r.role_name "roleName"
         FROM staffs st
@@ -264,7 +260,6 @@ async function createStaff(postData) {
     }
     return await getStaff(req);
   } catch (error) {
-    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
@@ -286,8 +281,6 @@ async function updateStaff(staffId, putData) {
       accountNo: BankDetails.accountNo,
       ifscCode: BankDetails.ifscCode
     }
-    console.log(bankDetailsReq)
-    console.log(BankDetails.bankAccountId)
     const bankUpdateRes = await updateBankAccount(BankDetails.bankAccountId, bankDetailsReq)
 
     //job Salary Allocate Details

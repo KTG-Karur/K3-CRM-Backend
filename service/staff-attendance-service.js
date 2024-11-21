@@ -121,9 +121,6 @@ async function updateStaffAttendance(putData) {
       _.mapKeys(item, (value, key) => _.snakeCase(key))
     );
 
-    console.log("excuteMethod")
-    console.log(excuteMethod)
-
     const staffAttendanceResult = excuteMethod.map(excuteData => {
       return sequelize.models.staff_attendance.update(excuteData, {
         where: { staff_attendance_id: excuteData.staff_attendance_id },

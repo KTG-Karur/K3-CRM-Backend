@@ -41,7 +41,6 @@ async function createSettingBenefit(postData) {
     }
     return await getSettingBenefit(req);
   } catch (error) {
-    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

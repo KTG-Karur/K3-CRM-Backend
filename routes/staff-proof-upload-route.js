@@ -28,11 +28,9 @@ async function UploadStaffProff(req, res) {
 
                 await pump(part.file, fs.createWriteStream(filePath)); // Save the file
 
-                files.push(fileName); // Collect saved file names
-                console.log(`File saved: ${fileName}`);
+                files.push(fileName); 
             } else {
                 otherFields[part.fieldname] = part.value; // Save non-file fields
-                console.log(`Field received: ${part.fieldname} = ${part.value}`);
             }
         }
 
