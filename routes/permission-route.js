@@ -39,9 +39,7 @@ async function createPermission(req, res) {
     responseEntries.data = await permissionServices.createPermission(req.body);
     if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     }
-  } catch (error) {
-    console.log('--->')    
-    console.log(error)   
+  } catch (error) {    
     responseEntries.error = true;
     responseEntries.message = error.message ? error.message : error;
     responseEntries.code = responseCode.BAD_REQUEST;

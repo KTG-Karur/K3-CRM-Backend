@@ -38,7 +38,7 @@ async function createBranch(req, res) {
         const validationResponse = await v.validate(req.body, schema)
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
-        } else {
+        } else {            
             responseEntries.data = await branchServices.createBranch(req.body);
             if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
         }
@@ -68,6 +68,7 @@ async function updateBranch(req, res) {
         responseEntries.error = true;
         responseEntries.message = error.message ? error.message : error;
         responseEntries.code = error.code ? error.code : responseCode.BAD_REQUEST;
+        res.status(responseCode.BAD_REQUEST);
     } finally {
         res.send(responseEntries);
     }

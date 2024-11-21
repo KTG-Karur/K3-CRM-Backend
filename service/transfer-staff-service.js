@@ -29,7 +29,7 @@ async function getTransferStaff(query) {
       b.branch_id "transferFrom", b2.branch_id "transferTo",
       b.branch_name "transferFromName", b2.branch_name "transferToName",
       ts.transfered_by "transferedById",CONCAT(s.first_name,' ',s.last_name) as transferedBy,
-      ts.createdAt
+      ts.createdAt,ts.status_id "statusId"
       FROM transfer_staffs ts
       left join branches b on b.branch_id = ts.transfer_from
       left join branches b2 on b2.branch_id = ts.transfer_to
@@ -60,6 +60,16 @@ async function createTransferStaff(postData) {
     postData.transferCode = await generateSerialNumber(applicantCodeFormat, count)
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
+
+    const existingTransferStaff = await sequelize.models.transfer_staff.findOne({
+      where: {
+        staff_id: excuteMethod.staff_id,transfer_date: excuteMethod.transfer_date
+      }
+    });
+    if (existingTransferStaff) {
+      throw new Error(messages.DUPLICATE_ENTRY);
+    }
+
     const transferStaffResult = await sequelize.models.transfer_staff.create(excuteMethod);
     const req = {
       transferStaffId: transferStaffResult.transfer_staff_id
@@ -67,20 +77,28 @@ async function createTransferStaff(postData) {
     return await getTransferStaff(req);
   } catch (error) {
     console.log(error)
-    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+    throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 
 async function updateTransferStaff(transferStaffId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
+
+    const duplicateTransferStaff = await sequelize.models.transfer_staff.findOne({
+      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND transfer_date = '${excuteMethod.transfer_date}'   AND 	transfer_staff_id != ${	transferStaffId}`)
+    });
+    if (duplicateTransferStaff) {
+      throw new Error(messages.DUPLICATE_ENTRY);
+    }
+
     const transferStaffResult = await sequelize.models.transfer_staff.update(excuteMethod, { where: { transfer_staff_id: transferStaffId } });
     const req = {
       transferStaffId: transferStaffId
     }
     return await getTransferStaff(req);
   } catch (error) {
-    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+    throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 

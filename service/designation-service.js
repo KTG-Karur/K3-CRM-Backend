@@ -44,6 +44,14 @@ async function getDesignation(query) {
 async function createDesignation(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
+    const existingDesignation = await sequelize.models.designation.findOne({
+      where: {
+        name: excuteMethod.name
+      }
+    });
+    if (existingDesignation) {
+      throw new Error(error.errors[0].message ? error.errors[0].message : messages.DUPLICATE_ENTRY);
+    }
     const designationResult = await sequelize.models.designation.create(excuteMethod);
     const req = {
       designationId: designationResult.designation_id

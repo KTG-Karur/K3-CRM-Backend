@@ -32,26 +32,41 @@ async function getDepartment(query) {
 async function createDepartment(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
+    const existingDepartment = await sequelize.models.department.findOne({
+      where: {
+        department_name: excuteMethod.department_name
+      }
+    });
+    if (existingDepartment) {
+      throw new Error(messages.DUPLICATE_ENTRY);
+    }
     const departmentResult = await sequelize.models.department.create(excuteMethod);
     const req = {
       departmentId: departmentResult.department_id
     }
     return await getDepartment(req);
   } catch (error) {
-    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+    throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 
 async function updateDepartment(departmentId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
+    const duplicateDepartment = await sequelize.models.department.findOne({
+      where: sequelize.literal(`department_id != '${excuteMethod.department_id}' AND department_name = '${excuteMethod.department_name}'`)
+    });
+    if (duplicateDepartment) {
+      throw new Error(messages.DUPLICATE_ENTRY);
+    }
+
     const departmentResult = await sequelize.models.department.update(excuteMethod, { where: { department_id: departmentId } });
     const req = {
       departmentId: departmentId
     }
     return await getDepartment(req);
 } catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
 }
 }
 
