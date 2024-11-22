@@ -25,6 +25,7 @@ async function getAttendanceIncharge(query) {
     }
     const result = await sequelize.query(`SELECT ts.attendance_incharge_id "attendanceInchargeId",
       ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
+      ts.is_active as isActive,
       ts.department_id "departmentId", ts.branch_id "branchId", b.branch_name "branchName", d.department_name "departmentName", ts.createdAt,ts.status_id "statusId"
       FROM attendance_incharges ts
       left join staffs s on s.staff_id = ts.staff_id
@@ -41,12 +42,12 @@ async function getAttendanceIncharge(query) {
 }
 
 async function createAttendanceIncharge(postData) {
-  try {    
+  try {
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
     const existingAttendanceIncharge = await sequelize.models.attendance_incharge.findOne({
       where: {
-        staff_id: excuteMethod.staff_id,branch_id: excuteMethod.branch_id,department_id: excuteMethod.department_id
+        staff_id: excuteMethod.staff_id, branch_id: excuteMethod.branch_id, department_id: excuteMethod.department_id
       }
     });
     if (existingAttendanceIncharge) {
@@ -67,7 +68,7 @@ async function updateAttendanceIncharge(attendanceInchargeId, putData) {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
 
     const duplicateAttendanceIncharge = await sequelize.models.attendance_incharge.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND branch_id = '${excuteMethod.branch_id}' AND department_id = '${excuteMethod.department_id}'   AND 	attendance_incharge_id != ${	attendanceInchargeId}`)
+      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND branch_id = '${excuteMethod.branch_id}' AND department_id = '${excuteMethod.department_id}'   AND 	attendance_incharge_id != ${attendanceInchargeId}`)
     });
     if (duplicateAttendanceIncharge) {
       throw new Error(messages.DUPLICATE_ENTRY);

@@ -27,6 +27,9 @@ module.exports = {
       transfered_by: {
         type: Sequelize.INTEGER
       },
+      branch_id: {
+        type: Sequelize.INTEGER,
+      },
       status_id: {
         allowNull: false,
         type: Sequelize.INTEGER,

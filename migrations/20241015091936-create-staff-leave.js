@@ -30,10 +30,12 @@ module.exports = {
       to_date: {
         type: Sequelize.DATE
       },
-      approved_by: {
-        type: Sequelize.INTEGER
+      status_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 28
       },
-      leave_status_id: {
+      approved_by: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -42,12 +44,8 @@ module.exports = {
       },
       updatedAt: {
         type: Sequelize.DATE
-      },
-      status_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 28
       }
+
     });
   },
   async down(queryInterface, Sequelize) {

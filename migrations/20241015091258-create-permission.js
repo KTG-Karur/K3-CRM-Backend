@@ -24,8 +24,8 @@ module.exports = {
       approved_by: {
         type: Sequelize.INTEGER
       },
-      permission_status_id: {
-        type: Sequelize.INTEGER
+      branch_id: {
+        type: Sequelize.INTEGER,
       },
       status_id: {
         allowNull: false,

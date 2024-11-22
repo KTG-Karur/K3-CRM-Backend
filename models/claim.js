@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     mode_of_payment_id: DataTypes.INTEGER,
     approved_by: DataTypes.INTEGER,
     approved_date: DataTypes.DATE,
+    bank_account_id: DataTypes.INTEGER,
     status_id: {
       type: DataTypes.INTEGER,
       defaultValue: 28,

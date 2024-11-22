@@ -45,6 +45,10 @@ module.exports = {
       approved_date: {
         type: Sequelize.DATE
       },
+      bank_account_id: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
       status_id: {
         allowNull: false,
         type: Sequelize.INTEGER,

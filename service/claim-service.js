@@ -51,10 +51,10 @@ async function getClaim(query) {
         left join branches b on b.branch_id = c.branch_id 
         left join status_lists sl on sl.status_list_id = c.claim_status 
         left join status_lists sl2 on sl2.status_list_id = c.mode_of_payment_id ${iql}`, {
-        type: QueryTypes.SELECT,
-        raw: true,
-        nest: false
-      });
+      type: QueryTypes.SELECT,
+      raw: true,
+      nest: false
+    });
     return result;
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
@@ -82,9 +82,9 @@ async function updateClaim(claimId, putData) {
       claimId: claimId
     }
     return await getClaim(req);
-} catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
+  } catch (error) {
+    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
 }
 
 module.exports = {

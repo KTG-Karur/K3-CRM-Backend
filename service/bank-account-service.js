@@ -10,7 +10,7 @@ async function getBankAccount(query) {
     if (query && Object.keys(query).length) {
       if (query.bankAccountId) {
         iql.bank_account_id = query.bankAccountId;
-      }  
+      }
       if (query.isActive) {
         iql.is_active = query.isActive;
       }
@@ -19,6 +19,7 @@ async function getBankAccount(query) {
       attributes: [['bank_account_id', 'bankAccountId'],
       ['account_holder_name', 'accountHolderName'],
       ['bank_name', 'bankName'],
+      [sequelize.literal(`CONCAT(bank_name, ' - ', branch_name)`), 'bankAndBranch'],
       ['branch_name', 'branchName'],
       ['account_no', 'accountNo'],
       ['ifsc_code', 'ifscCode'],
@@ -35,6 +36,8 @@ async function getBankAccount(query) {
 
 async function createBankAccount(postData) {
   try {
+    console.log("postData")
+    console.log(postData)
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
     const bankAccountResult = await sequelize.models.bank_account.create(excuteMethod);
     const req = {

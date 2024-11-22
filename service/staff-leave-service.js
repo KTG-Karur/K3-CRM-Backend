@@ -19,7 +19,7 @@ async function getStaffLeave(query) {
       if (query.leaveStatusId) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
-        iql += ` sl.leave_status_id = ${query.leaveStatusId}`;
+        iql += ` sl.status_id = ${query.leaveStatusId}`;
       }
       if (query.attendanceDate) {
         iql += count >= 1 ? ` AND` : ``;
@@ -32,11 +32,11 @@ async function getStaffLeave(query) {
         sl.leave_type_id "leaveTypeId",sl3.status_name "leaveTypeName",CONCAT(s.first_name,' ',s.last_name) as staffName,
         sl.day_count "dayCount", sl.reason, sl.from_date "fromDate",
          s.staff_code "staffCode",
-        sl.to_date "toDate", sl.approved_by "approvedBy", sl.leave_status_id "leaveStatusId",
+        sl.to_date "toDate", sl.approved_by "approvedBy", sl.status_id "leaveStatusId",
         sl2.status_name "statusName", sl.createdAt, sl.updatedAt
         FROM staff_leaves sl
         left join staffs s on s.staff_id = sl.staff_id 
-        left join status_lists sl2 on sl2.status_list_id = sl.leave_status_id 
+        left join status_lists sl2 on sl2.status_list_id = sl.status_id 
         left join status_lists sl3 on sl3.status_list_id = sl.leave_type_id  ${iql}`,
       {
         type: QueryTypes.SELECT,
@@ -61,7 +61,7 @@ async function createStaffLeave(postData) {
       FROM staff_leaves sl
       WHERE (
          '${postData.fromDate}' <= sl.to_date 
-          AND '${postData.toDate}' >= sl.from_date AND sl.staff_id = ${postData.staffId} AND sl.leave_status_id != 30
+          AND '${postData.toDate}' >= sl.from_date AND sl.staff_id = ${postData.staffId} AND sl.status_id != 30
       )`,
       {
         type: QueryTypes.SELECT,
@@ -98,7 +98,7 @@ async function updateStaffLeave(staffLeaveId, putData) {
           FROM staff_leaves sl
           WHERE (
              '${putData.fromDate}' <= sl.to_date 
-              AND '${putData.toDate}' >= sl.from_date AND sl.staff_id = ${putData.staffId} AND sl.leave_status_id != 30 AND sl.staff_leave_id <> ${staffLeaveId}
+              AND '${putData.toDate}' >= sl.from_date AND sl.staff_id = ${putData.staffId} AND sl.status_id != 30 AND sl.staff_leave_id <> ${staffLeaveId}
           )`,
         {
           type: QueryTypes.SELECT,
@@ -125,7 +125,6 @@ async function updateStaffLeave(staffLeaveId, putData) {
         throw new Error(messages.LEAVE_APPLIED_BEFORE);
       }
     } else {
-
       const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key));
       const staffLeaveResult = await sequelize.models.staff_leave.update(
         excuteMethod,
