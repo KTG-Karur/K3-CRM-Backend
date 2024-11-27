@@ -39,6 +39,9 @@ module.exports = {
       bill_image_name: {
         type: Sequelize.STRING
       },
+      branch_id: {
+        type: Sequelize.INTEGER
+      },
       status_id: {
         allowNull: false,
         type: Sequelize.INTEGER,

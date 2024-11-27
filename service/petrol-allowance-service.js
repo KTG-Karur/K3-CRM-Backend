@@ -41,6 +41,7 @@ async function getPetrolAllowance(query) {
     const result = await sequelize.query(`SELECT pa.petrol_allowance_id "petrolAllowanceId", pa.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
         pa.allowance_date "allowanceDate", pa.from_place "fromPlace", pa.to_place "toPlace",
         pa.activity_id "activityId",pa.is_active "isActive",
+        pa.branch_id "branchId",
         GROUP_CONCAT(a.activity_name SEPARATOR ' & ') AS activityName,
         pa.total_km "totalKm", pa.amount, pa.bill_no "billNo",
         pa.bill_image_name "billImageName", pa.createdAt

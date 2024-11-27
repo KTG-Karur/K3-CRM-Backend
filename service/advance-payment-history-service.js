@@ -17,11 +17,16 @@ async function getAdvancePaymentHistory(query) {
         count++;
         iql += ` ts.staff_advance_id = ${query.staffAdvanceId}`;
       }
+      if (query.advancePaymentHistoryId) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` ts.advance_payment_history_id = ${query.advancePaymentHistoryId}`;
+      }
     }
     const result = await sequelize.query(`SELECT ts.advance_payment_history_id "advancePaymentHistoryId",
       sa.staff_id "staffId",
       ts.staff_advance_id "staffAdvanceId", ts.paid_date "paidDate",
-      ts.paid_amount "paidAmount", ts.paid_to "paidTo",
+      ts.paid_amount "paidAmount", ts.paid_to "paidTo", ts.is_active "isActive",
       ts.createdAt
       FROM advance_payment_histories ts
       left join staff_advances sa on sa.staff_advance_id = ts.staff_advance_id ${iql}`, {
@@ -29,7 +34,7 @@ async function getAdvancePaymentHistory(query) {
       raw: true,
       nest: false
     });
-    
+
     return result;
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
@@ -40,6 +45,8 @@ async function createAdvancePaymentHistory(postData) {
   try {
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
+    console.log("excuteMethod");
+    console.log(excuteMethod);
     const advancePaymentHistoryResult = await sequelize.models.advance_payment_history.create(excuteMethod);
     const req = {
       advancePaymentHistoryId: advancePaymentHistoryResult.advance_payment_history_id
@@ -59,6 +66,8 @@ async function updateAdvancePaymentHistory(advancePaymentHistoryId, putData) {
     }
     return await getAdvancePaymentHistory(req);
   } catch (error) {
+    console.log("error")
+    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

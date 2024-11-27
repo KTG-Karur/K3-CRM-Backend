@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       leave_type_id: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       leave_count_day: {
         type: Sequelize.STRING

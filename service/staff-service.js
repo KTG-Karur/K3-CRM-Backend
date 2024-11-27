@@ -53,7 +53,8 @@ async function getStaff(query) {
         iql += ` st.is_active = ${query.isActive}`;
       }
     }
-    const result = await sequelize.query(`SELECT st.staff_id "staffId",CONCAT(sur.status_name,'.',st.first_name,' ',st.last_name) as staffName, st.staff_code "staffCode", st.contact_no "contactNo", st.branch_id "branchId", st.role_id "roleId", 
+    const result = await sequelize.query(`SELECT st.staff_id "staffId",CONCAT(sur.status_name,'.',st.first_name,' ',st.last_name) as staffName, st.staff_code "staffCode", st.contact_no "contactNo", st.branch_id "branchId", st.role_id "roleId",
+      st.is_active "isActive", 
         st.department_id "departmentId",d.department_name "departmentName",r.role_name "roleName"
         FROM staffs st
         left join department d on d.department_id = st.department_id 
@@ -197,6 +198,8 @@ async function getStaffDetails(query) {
 
 async function createStaff(postData) {
   try {
+    console.log("postData")
+    console.log(postData)
     const applicantCodeFormat = `K3-STAFF-`
     const personalInfoData = postData.personalInfoData
 
@@ -228,6 +231,8 @@ async function createStaff(postData) {
 
     //  Staff Creation
     const excuteMethod = _.mapKeys(personalInfoData, (value, key) => _.snakeCase(key))
+    console.log("excuteMethod");
+    console.log(excuteMethod);
     const staffResult = await sequelize.models.staff.create(excuteMethod);
 
     //work experience Creation
@@ -260,6 +265,8 @@ async function createStaff(postData) {
     }
     return await getStaff(req);
   } catch (error) {
+    console.log("error")
+    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
@@ -272,6 +279,8 @@ async function updateStaff(staffId, putData) {
     const excuteMethod = _.mapKeys(personalInfoData, (value, key) => _.snakeCase(key))
     const staffResult = await sequelize.models.staff.update(excuteMethod, { where: { staff_id: staffIdVal } });
 
+    console.log("excuteMethod");
+    console.log(excuteMethod);
     //bank update
     const BankDetails = putData.jobRoleDetails
     const bankDetailsReq = {
@@ -316,9 +325,23 @@ async function updateStaff(staffId, putData) {
   }
 }
 
+async function deleteStaff(staffId, putData) {
+  try {
+    const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
+    const staffResult = await sequelize.models.staff.update(excuteMethod, { where: { staff_id: staffId } });
+    const req = {
+      staffId: staffId
+    }
+    return await getStaff(req);
+  } catch (error) {
+    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
+}
+
 module.exports = {
   getStaff,
   updateStaff,
   createStaff,
-  getStaffDetails
+  getStaffDetails,
+  deleteStaff,
 };

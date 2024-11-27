@@ -41,10 +41,6 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER,
     gender_id: DataTypes.INTEGER,
     martial_status_id: DataTypes.INTEGER,
-    status_id: {
-      type: DataTypes.INTEGER,
-      defaultValue: 28,
-    },
     is_active: {
       type: DataTypes.BOOLEAN,
       defaultValue: 1

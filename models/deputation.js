@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
     to_place: DataTypes.STRING,
     reason: DataTypes.STRING,
     deputation_by: DataTypes.INTEGER,
-    branch_id: DataTypes.INTEGER,
     status_id: {
       type: DataTypes.INTEGER,
       defaultValue: 28,

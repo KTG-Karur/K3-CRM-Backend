@@ -9,10 +9,10 @@ const settingLeaveDeductionServices = require("../service/setting-leave-deductio
 const _ = require('lodash');
 
 const schema = {
-    
+
     leaveDeductionPercentage: { type: "string", optional: false, min: 1, max: 100 },
     leaveCountDay: { type: "string", optional: false, min: 1, max: 100 },
-    leaveTypeId: "number|required|integer|positive",
+    // leaveTypeId: "number|required|integer|positive",
     // totalKm: { type: "string", optional: false, min: 1, max: 100 },
     // amount: { type: "string", optional: false, min: 1, max: 100 },
     // billNo: { type: "string", optional: false, min: 1, max: 100 },

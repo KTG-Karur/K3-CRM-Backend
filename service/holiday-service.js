@@ -17,11 +17,11 @@ async function getHoliday(query) {
         iql += ` holiday_id = ${query.holidayId}`;
       }
     }
-    const result = await sequelize.query(`SELECT holiday_id "holidayId", holiday_date "holidayDate", reason, createdAt FROM holidays ${iql}`, {
-        type: QueryTypes.SELECT,
-        raw: true,
-        nest: false
-      });
+    const result = await sequelize.query(`SELECT holiday_id "holidayId", is_active "isActive", holiday_date "holidayDate", reason, createdAt FROM holidays ${iql}`, {
+      type: QueryTypes.SELECT,
+      raw: true,
+      nest: false
+    });
     return result;
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
@@ -49,9 +49,9 @@ async function updateHoliday(holidayId, putData) {
       holidayId: holidayId
     }
     return await getHoliday(req);
-} catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
+  } catch (error) {
+    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
 }
 
 module.exports = {

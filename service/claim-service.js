@@ -39,9 +39,10 @@ async function getClaim(query) {
     }
     const result = await sequelize.query(`SELECT c.claim_id "claimId", c.claim_type_id "claimTypeId",ct.claim_type_name "claimTypeName",
         c.requested_by "requestedById",CONCAT(s.first_name,' ',s.last_name) as requestedBy,
+        c.bank_account_id "bankAccountId",
         c.requested_amount "requestedAmount", c.reason, c.branch_id "branchId",b.branch_name "branchName",
-        c.recepit_image_name "recepitImageName",sl.status_name "claimStatusName", c.claim_amount "claimAmount",
-        c.apply_date "applyDate", c.claim_status "claimStatusId", c.mode_of_payment_id "modeOfPaymentId",
+        c.recepit_image_name "recepitImageName",sl.status_name "statusName", c.claim_amount "claimAmount",
+        c.apply_date "applyDate", c.status_id "statusId", c.mode_of_payment_id "modeOfPaymentId",
         sl2.status_name "paymentModeName", c.approved_date "approvedDate",c.approved_by "approvedById",
         CONCAT(s2.first_name,' ',s2.last_name) as approvedBy, c.createdAt
         FROM claims c
@@ -49,7 +50,7 @@ async function getClaim(query) {
         left join staffs s on s.staff_id = c.requested_by 
         left join staffs s2 on s2.staff_id = c.approved_by 
         left join branches b on b.branch_id = c.branch_id 
-        left join status_lists sl on sl.status_list_id = c.claim_status 
+        left join status_lists sl on sl.status_list_id = c.status_id 
         left join status_lists sl2 on sl2.status_list_id = c.mode_of_payment_id ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,

@@ -30,6 +30,9 @@ module.exports = {
       to_date: {
         type: Sequelize.DATE
       },
+      branch_id: {
+        type: Sequelize.INTEGER,
+      },
       status_id: {
         allowNull: false,
         type: Sequelize.INTEGER,

@@ -26,7 +26,7 @@ async function getStaffAdvance(query) {
     const result = await sequelize.query(`SELECT ts.staff_advance_id "staffAdvanceId",
       ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
       ts.apply_date "applyDate", ts.approved_date "approvedDate",
-      ts.amount "amount", ts.reason "reason", ts.paid_amount "paidAmount", ts.balance_amount "balanceAmount", ts.status_id "statusId",
+      ts.amount "amount", ts.reason "reason", ts.branch_id "branchId", ts.status_id "statusId",ts.is_active "isActive", ts.paid_amount "paidAmount", ts.balance_amount "balanceAmount", ts.status_id "statusId",
       ts.approved_by "	approvedById",CONCAT(s.first_name,' ',s.last_name) as 	approvedBy,
       ts.createdAt, COALESCE(SUM(ph.paid_amount), 0) AS "paidAmount"
       FROM staff_advances ts
@@ -47,18 +47,18 @@ async function getStaffAdvance(query) {
 }
 
 async function createStaffAdvance(postData) {
-  try {       
+  try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
     const existingStaffAdvance = await sequelize.models.staff_advance.findOne({
       where: {
-        staff_id: excuteMethod.staff_id,apply_date: excuteMethod.apply_date
+        staff_id: excuteMethod.staff_id, apply_date: excuteMethod.apply_date
       }
     });
     if (existingStaffAdvance) {
       throw new Error(messages.DUPLICATE_ENTRY);
     }
 
-    const staffAdvanceResult = await sequelize.models.staff_advance.create(excuteMethod);    
+    const staffAdvanceResult = await sequelize.models.staff_advance.create(excuteMethod);
     const req = {
       staffAdvanceId: staffAdvanceResult.staff_advance_id
     }
@@ -69,12 +69,12 @@ async function createStaffAdvance(postData) {
 }
 
 async function updateStaffAdvance(staffAdvanceId, putData) {
-  try {   
+  try {
 
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
 
     const duplicateStaffAdvance = await sequelize.models.staff_advance.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND apply_date = '${excuteMethod.apply_date}' AND staff_advance_id != '${excuteMethod.staff_advance_id}'`)
+      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND apply_date = '${excuteMethod.apply_date}' AND staff_advance_id != '${staffAdvanceId}'`)
     });
     if (duplicateStaffAdvance) {
       throw new Error(messages.DUPLICATE_ENTRY);

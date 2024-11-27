@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     leave_deduction_percentage: DataTypes.STRING,
-    leave_type_id: DataTypes.STRING,
+    leave_type_id: DataTypes.INTEGER,
     leave_count_day: DataTypes.STRING,
     is_active: {
       type: DataTypes.BOOLEAN,

@@ -36,9 +36,6 @@ module.exports = {
       apply_date: {
         type: Sequelize.DATE
       },
-      claim_status: {
-        type: Sequelize.INTEGER
-      },
       mode_of_payment_id: {
         type: Sequelize.INTEGER
       },

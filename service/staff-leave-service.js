@@ -16,10 +16,10 @@ async function getStaffLeave(query) {
         count++;
         iql += ` sl.staff_leave_id = ${query.staffLeaveId}`;
       }
-      if (query.leaveStatusId) {
+      if (query.statusId) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
-        iql += ` sl.status_id = ${query.leaveStatusId}`;
+        iql += ` sl.status_id = ${query.statusId}`;
       }
       if (query.attendanceDate) {
         iql += count >= 1 ? ` AND` : ``;
@@ -32,7 +32,8 @@ async function getStaffLeave(query) {
         sl.leave_type_id "leaveTypeId",sl3.status_name "leaveTypeName",CONCAT(s.first_name,' ',s.last_name) as staffName,
         sl.day_count "dayCount", sl.reason, sl.from_date "fromDate",
          s.staff_code "staffCode",
-        sl.to_date "toDate", sl.approved_by "approvedBy", sl.status_id "leaveStatusId",
+         sl.branch_id "branchId",
+        sl.to_date "toDate", sl.approved_by "approvedBy", sl.status_id "statusId",
         sl2.status_name "statusName", sl.createdAt, sl.updatedAt
         FROM staff_leaves sl
         left join staffs s on s.staff_id = sl.staff_id 
@@ -92,7 +93,7 @@ async function createStaffLeave(postData) {
 async function updateStaffLeave(staffLeaveId, putData) {
   try {
     // check is cancelled or not
-    if (putData.leaveStatusId == 28) {
+    if (putData.statusId == 28) {
       const checkPerviousApplyLeave = await sequelize.query(
         `SELECT sl.staff_leave_id "staffLeaveId"
           FROM staff_leaves sl

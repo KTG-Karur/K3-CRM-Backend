@@ -60,9 +60,11 @@ async function createDeputation(postData) {
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
 
+    console.log("excuteMethod")
+    console.log(excuteMethod)
     const existingDeputation = await sequelize.models.deputation.findOne({
       where: {
-        staff_id: excuteMethod.staff_id,deputation_date: excuteMethod.deputation_date
+        staff_id: excuteMethod.staff_id, deputation_date: excuteMethod.deputation_date
       }
     });
     if (existingDeputation) {
@@ -75,6 +77,8 @@ async function createDeputation(postData) {
     }
     return await getDeputation(req);
   } catch (error) {
+    console.log("error")
+    console.log(error)
     throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
