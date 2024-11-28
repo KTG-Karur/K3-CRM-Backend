@@ -9,7 +9,7 @@ const deputationServices = require("../service/deputation-service");
 const _ = require('lodash');
 
 const schema = {
-    staffId: "number|required|integer|positive",
+    // staffId: "number|required|integer|positive",
     fromPlace: "number|required|integer|positive",
     toPlace: "number|required|integer|positive",
     //activityId: { type: "string", optional: false, min: 1, max: 100 },

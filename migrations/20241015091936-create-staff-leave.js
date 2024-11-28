@@ -18,9 +18,6 @@ module.exports = {
       day_count: {
         type: Sequelize.INTEGER
       },
-      cancel_reason: {
-        type: Sequelize.STRING
-      },
       reason: {
         type: Sequelize.STRING
       },
@@ -29,6 +26,15 @@ module.exports = {
       },
       to_date: {
         type: Sequelize.DATE
+      },
+      spoken_date: {
+        type: Sequelize.DATE
+      },
+      spoken_time: {
+        type: Sequelize.STRING
+      },
+      spoken_staff_id: {
+        type: Sequelize.STRING
       },
       branch_id: {
         type: Sequelize.INTEGER,

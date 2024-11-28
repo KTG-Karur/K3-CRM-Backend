@@ -18,6 +18,15 @@ module.exports = {
       permission_date: {
         type: Sequelize.DATE
       },
+      spoken_date: {
+        type: Sequelize.DATE
+      },
+      spoken_time: {
+        type: Sequelize.STRING
+      },
+      spoken_staff_id: {
+        type: Sequelize.STRING
+      },
       reason: {
         type: Sequelize.STRING
       },

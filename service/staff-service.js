@@ -279,8 +279,6 @@ async function updateStaff(staffId, putData) {
     const excuteMethod = _.mapKeys(personalInfoData, (value, key) => _.snakeCase(key))
     const staffResult = await sequelize.models.staff.update(excuteMethod, { where: { staff_id: staffIdVal } });
 
-    console.log("excuteMethod");
-    console.log(excuteMethod);
     //bank update
     const BankDetails = putData.jobRoleDetails
     const bankDetailsReq = {

@@ -15,7 +15,10 @@ module.exports = {
       transfer_code: {
         type: Sequelize.STRING
       },
-      transfer_date: {
+      joining_date: {
+        type: Sequelize.DATE
+      },
+      relieving_date: {
         type: Sequelize.DATE
       },
       transfer_from: {

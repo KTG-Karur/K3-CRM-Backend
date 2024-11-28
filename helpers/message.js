@@ -13,5 +13,6 @@ module.exports = {
     UPLOADED_SUCCESSFULLY : 'Uploaded Successfully...!',
     UNAVAILABLE_BALANCE : 'Insufficient Balance...!',
     LEAVE_APPLIED_BEFORE : 'Leave Applied Before...!',
+    ONDUTY_APPLIED_BEFORE : 'Leave Applied Before...!',
     DUPLICATE_ENTRY : 'Data already exists...!',
 };

@@ -23,13 +23,26 @@ async function getPermission(query) {
       }
     }
     const result = await sequelize.query(`SELECT ts.permission_id "permissionId",ts.permission_type_id "permissionTypeId",
-      ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
+      ts.staff_id "staffId",CONCAT(sur.status_name,'.',s.first_name,' ',s.last_name) as staffName,
       ts.branch_id "branchId",
       s.branch_id "staffBranchId",
+      ts.spoken_date "spokenDate",
+      ts.spoken_time "spokenTime",
+      ts.spoken_staff_id "spokenStaffId",
+      CONCAT(sur_sp.status_name,'.',sp.first_name,' ',sp.last_name) as "spokenStaffName",
       ts.permission_date "permissionDate", ts.reason "reason", sl.status_name "permissionTypeName",
-      ts.createdAt,ts.status_id "statusId"
+      ts.createdAt,ts.status_id "statusId",
+      des.designation_name 'designationName',  dep.department_name 'departmentName',
+      des_sp.designation_name 'spokenDesignationName',  dep_sp.department_name 'spokenDepartmentName'
       FROM  permissions ts
       left join staffs s on s.staff_id = ts.staff_id
+      left join staffs sp on sp.staff_id = ts.spoken_staff_id
+      left join designation des on des.designation_id = s.designation_id
+      left join department dep on dep.department_id = s.department_id
+      left join designation des_sp on des_sp.designation_id = sp.designation_id
+      left join department dep_sp on dep_sp.department_id = sp.department_id
+      left join status_lists sur on sur.status_list_id = s.surname_id 
+      left join status_lists sur_sp on sur_sp.status_list_id = sp.surname_id 
       left join status_lists sl on sl.status_list_id = ts.permission_type_id  ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,
