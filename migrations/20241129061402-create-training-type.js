@@ -2,18 +2,19 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user_rights', {
-      user_rights_id: {
+    await queryInterface.createTable('training_types', {
+      training_type_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      staff_id: {
-        type: Sequelize.INTEGER
-      },
-      user_permission: {
+      training_type_name: {
         type: Sequelize.STRING
+      },
+      is_active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,
@@ -26,6 +27,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('user_rights');
+    await queryInterface.dropTable('training_types');
   }
 };

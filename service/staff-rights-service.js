@@ -5,16 +5,16 @@ const messages = require("../helpers/message");
 const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 
-async function getUserRights(query) {
+async function getStaffRights(query) {
   try {
     let iql = "";
     let count = 0;
     if (query && Object.keys(query).length) {
       iql += `WHERE`;
-      if (query.userRightsId) {
+      if (query.staffRightsId) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
-        iql += ` user_rights_id = ${query.userRightsId}`;
+        iql += ` staff_rights_id = ${query.staffRightsId}`;
       }
       if (query.staffId) {
         iql += count >= 1 ? ` AND` : ``;
@@ -22,7 +22,7 @@ async function getUserRights(query) {
         iql += ` staff_id = ${query.staffId}`;
       }
     }
-    const result = await sequelize.query(`SELECT user_rights_id as "userRightsId",user_permission as "userRightsName",staff_id "staffId",createdAt "createdAt" FROM user_rights ${iql}`, {
+    const result = await sequelize.query(`SELECT staff_rights_id as "staffRightsId",staff_rights_permission as "staffRightsPermission",staff_id "staffId",createdAt "createdAt" FROM staff_rights ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
@@ -33,36 +33,34 @@ async function getUserRights(query) {
   }
 }
 
-async function createUserRights(postData) {
+async function createStaffRights(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
-    console.log("excuteMethod")
-    console.log(excuteMethod)
-    const userRightsResult = await sequelize.models.user_rights.create(excuteMethod);
+    const staffRightsResult = await sequelize.models.staff_rights.create(excuteMethod);  
     const req = {
-      userRightsId: userRightsResult.userRights_id
+      staffRightsId: staffRightsResult.staff_rights_id
     }
-    return await getUserRights(req);
+    return await getStaffRights(req);
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 
-async function updateUserRights(userRightsId, putData) {
+async function updateStaffRights(staffRightsId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
-    const userRightsResult = await sequelize.models.user_rights.update(excuteMethod, { where: { userRights_id: userRightsId } });
+    const staffRightsResult = await sequelize.models.staff_rights.update(excuteMethod, { where: { staff_rights_id: staffRightsId } });
     const req = {
-      userRightsId: userRightsId
+      staffRightsId: staffRightsId
     }
-    return await getUserRights(req);
+    return await getStaffRights(req);
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 
 module.exports = {
-  getUserRights,
-  updateUserRights,
-  createUserRights,
+  getStaffRights,
+  updateStaffRights,
+  createStaffRights,
 };

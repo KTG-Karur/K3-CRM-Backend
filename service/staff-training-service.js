@@ -6,16 +6,16 @@ const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 const { generateSerialNumber } = require('../utils/utility');
 
-async function getDeputation(query) {
+async function getStaffTraining(query) {
   try {
     let iql = "";
     let count = 0;
     if (query && Object.keys(query).length) {
       iql += `WHERE`;
-      if (query.deputationId) {
+      if (query.staffTrainingId) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
-        iql += ` ts.deputation_id = ${query.deputationId}`;
+        iql += ` ts.staff_training_id = ${query.staffTrainingId}`;
       }
       if (query.staffId) {
         iql += count >= 1 ? ` AND` : ``;
@@ -23,21 +23,21 @@ async function getDeputation(query) {
         iql += ` s.staff_id = ${query.staffId}`;
       }
     }
-    const result = await sequelize.query(`SELECT ts.deputation_id "deputationId",
+    const result = await sequelize.query(`SELECT ts.staff_training_id "staffTrainingId",
       ts.staff_id "staffId",CONCAT(sur.status_name,'.',s.first_name,' ',s.last_name) as staffName,
-      ts.deputation_code "deputationCode", ts.deputation_date "deputationDate", ts.status_id "statusId",
+      ts.staff_training_code "staffTrainingCode", ts.staff_training_date "staffTrainingDate", ts.status_id "statusId",
       des.designation_name 'designationName',  dep.department_name 'departmentName',
       ts.from_date "fromDate", ts.to_date "toDate", b.branch_id "fromPlace", b2.branch_id "toPlace",
-      b.branch_name "fromPlaceName", b2.branch_name "toPlaceName", ts.reason "reason",ts.deputation_by "deputationById",CONCAT(s.first_name,' ',s.last_name) as deputationBy,
+      b.branch_name "fromPlaceName", b2.branch_name "toPlaceName", ts.reason "reason",ts.staff_training_by "staff_trainingById",CONCAT(s.first_name,' ',s.last_name) as staff_trainingBy,
       ts.createdAt
-      FROM deputations ts
+      FROM staff_trainings ts
       left join branches b on b.branch_id = ts.from_place
       left join branches b2 on b2.branch_id = ts.to_place
       left join staffs s on s.staff_id = ts.staff_id 
       left join designation des on des.designation_id = s.designation_id 
       left join department dep on dep.department_id = s.department_id
       left join status_lists sur on sur.status_list_id = s.surname_id
-      left join staffs s2 on s2.staff_id = ts.deputation_by ${iql}`, {
+      left join staffs s2 on s2.staff_id = ts.staff_training_by ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
@@ -48,38 +48,45 @@ async function getDeputation(query) {
   }
 }
 
-async function createDeputation(postData) {
+async function createStaffTraining(postData) {
   try {
 
-    const countResult = await sequelize.query(`SELECT ts.deputation_code "deputationCode"
-      FROM deputations ts ORDER BY ts.deputation_id DESC LIMIT 1`, {
+    const countResult = await sequelize.query(`SELECT ts.staff_training_code "staff_trainingCode"
+      FROM staff_trainings ts ORDER BY ts.staff_training_id DESC LIMIT 1`, {
       type: QueryTypes.SELECT,
       raw: true,
       nest: false
     });
 
+    console.log("countResult")
+    console.log(countResult)
     const applicantCodeFormat = `K3-KRR-`
-    const count = countResult.length > 0 ? parseInt(countResult[0].deputationCode.split("-").pop()) : `00000`
-    postData.deputationCode = await generateSerialNumber(applicantCodeFormat, count)
+    const count = countResult.length > 0 ? parseInt(countResult[0].staff_trainingCode.split("-").pop()) : `00000`
+    postData.staffTrainingCode = await generateSerialNumber(applicantCodeFormat, count)
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
 
     console.log("excuteMethod")
     console.log(excuteMethod)
-    const existingDeputation = await sequelize.models.deputation.findOne({
+    const existingStaffTraining = await sequelize.models.staff_training.findOne({
       where: {
-        staff_id: excuteMethod.staff_id, deputation_date: excuteMethod.deputation_date
+        staff_id: excuteMethod.staff_id, staff_training_date: sequelize.where(
+          sequelize.fn('DATE', sequelize.col('staff_training_date')),
+          excuteMethod.staff_training_date
+        )
       }
     });
-    if (existingDeputation) {
+    console.log("existingStaffTraining")
+    console.log(existingStaffTraining)
+    if (existingStaffTraining) {
       throw new Error(messages.DUPLICATE_ENTRY);
     }
 
-    const deputationResult = await sequelize.models.deputation.create(excuteMethod);
+    const staffTrainingResult = await sequelize.models.staff_training.create(excuteMethod);
     const req = {
-      deputationId: deputationResult.deputation_id
+      staffTrainingId: staffTrainingResult.staff_training_id
     }
-    return await getDeputation(req);
+    return await getStaffTraining(req);
   } catch (error) {
     console.log("error")
     console.log(error)
@@ -87,27 +94,27 @@ async function createDeputation(postData) {
   }
 }
 
-async function updateDeputation(deputationId, putData) {
+async function updateStaffTraining(staffTrainingId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
-    const duplicateDeputation = await sequelize.models.deputation.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND deputation_date = '${excuteMethod.deputation_date}' AND deputation_id != '${excuteMethod.deputation_id}'`)
+    const duplicateStaffTraining = await sequelize.models.staff_training.findOne({
+      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND staff_training_date = '${excuteMethod.staff_training_date}' AND staff_training_id != '${excuteMethod.staff_training_id}'`)
     });
-    if (duplicateDeputation) {
+    if (duplicateStaffTraining) {
       throw new Error(messages.DUPLICATE_ENTRY);
     }
-    const deputationResult = await sequelize.models.deputation.update(excuteMethod, { where: { deputation_id: deputationId } });
+    const staff_trainingResult = await sequelize.models.staff_training.update(excuteMethod, { where: { staff_training_id: staffTrainingId } });
     const req = {
-      deputationId: deputationId
+      staffTrainingId: staffTrainingId
     }
-    return await getDeputation(req);
+    return await getStaffTraining(req);
   } catch (error) {
     throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 
 module.exports = {
-  getDeputation,
-  updateDeputation,
-  createDeputation
+  getStaffTraining,
+  updateStaffTraining,
+  createStaffTraining
 };

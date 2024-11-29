@@ -14,16 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   staff_right.init({
-    staff_right_id: {
+    staff_rights_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
     staff_id: DataTypes.INTEGER,
-    staff_right_permission: DataTypes.TEXT,
+    staff_rights_permission: DataTypes.TEXT,
   }, {
     sequelize,
-    modelName: 'staff_right',
+    modelName: 'staff_rights',
   });
   return staff_right;
 };

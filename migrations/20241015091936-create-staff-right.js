@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('staff_rights', {
-      staff_right_id: {
+      staff_rights_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -12,7 +12,7 @@ module.exports = {
       staff_id: {
         type: Sequelize.INTEGER
       },
-      staff_right_permission: {
+      staff_rights_permission: {
         type: Sequelize.TEXT
       },
       createdAt: {

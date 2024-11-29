@@ -5,17 +5,17 @@ const { verifyToken } = require("../middleware/auth");
 const { ResponseEntry } = require("../helpers/construct-response");
 const responseCode = require("../helpers/status-code");
 const messages = require("../helpers/message");
-const userRightsServices = require("../service/user-rights-service");
+const staffRightsServices = require("../service/staff-rights-service");
 const _ = require('lodash');
 
 const schema = {
-  // userRightsName: { type: "string", optional: false, min: 1, max: 100 }
+  // staffRightsName: { type: "string", optional: false, min: 1, max: 100 }
 }
 
-async function getUserRights(req, res) {
+async function getStaffRights(req, res) {
   const responseEntries = new ResponseEntry();
   try {
-    responseEntries.data = await userRightsServices.getUserRights(req.query);
+    responseEntries.data = await staffRightsServices.getStaffRights(req.query);
     if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
   } catch (error) {
     responseEntries.error = true;
@@ -27,7 +27,7 @@ async function getUserRights(req, res) {
   }
 }
 
-async function createUserRights(req, res) {
+async function createStaffRights(req, res) {
   const responseEntries = new ResponseEntry();
   const v = new Validator()
   try {
@@ -35,7 +35,7 @@ async function createUserRights(req, res) {
     if (validationResponse != true) {
       throw new Error(messages.VALIDATION_FAILED);
     } else {
-      responseEntries.data = await userRightsServices.createUserRights(req.body);
+      responseEntries.data = await staffRightsServices.createStaffRights(req.body);
       if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     }
   } catch (error) {
@@ -48,7 +48,7 @@ async function createUserRights(req, res) {
   }
 }
 
-async function updateUserRights(req, res) {
+async function updateStaffRights(req, res) {
   const responseEntries = new ResponseEntry();
   const v = new Validator()
   try {
@@ -57,7 +57,7 @@ async function updateUserRights(req, res) {
     if (validationResponse != true) {
       throw new Error(messages.VALIDATION_FAILED);
     } else {
-      responseEntries.data = await userRightsServices.updateUserRights(req.params.userRightsId, req.body);
+      responseEntries.data = await staffRightsServices.updateStaffRights(req.params.staffRightsId, req.body);
       if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
     }
   } catch (error) {
@@ -73,22 +73,22 @@ async function updateUserRights(req, res) {
 module.exports = async function (fastify) {
   fastify.route({
     method: 'GET',
-    url: '/user-rights',
+    url: '/staff-rights',
     preHandler: verifyToken,
-    handler: getUserRights
+    handler: getStaffRights
   });
 
   fastify.route({
     method: 'POST',
-    url: '/user-rights',
+    url: '/staff-rights',
     preHandler: verifyToken,
-    handler: createUserRights
+    handler: createStaffRights
   });
 
   fastify.route({
     method: 'PUT',
-    url: '/user-rights/:userRightsId',
+    url: '/staff-rights/:staffRightsId',
     preHandler: verifyToken,
-    handler: updateUserRights
+    handler: updateStaffRights
   });
 };
