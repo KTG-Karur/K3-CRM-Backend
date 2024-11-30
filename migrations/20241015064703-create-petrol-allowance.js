@@ -27,16 +27,25 @@ module.exports = {
       total_km: {
         type: Sequelize.INTEGER
       },
-      amount: {
+      bill_image_name: {
         type: Sequelize.STRING
       },
       bill_no: {
         type: Sequelize.STRING
       },
-      bill_image_name: {
+      date_of_purchase: {
+        type: Sequelize.DATE
+      },
+      name_of_dealer: {
         type: Sequelize.STRING
       },
-      bill_image_name: {
+      price_per_litre: {
+        type: Sequelize.STRING
+      },
+      qty_per_litre: {
+        type: Sequelize.STRING
+      },
+      total_amount: {
         type: Sequelize.STRING
       },
       branch_id: {

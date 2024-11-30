@@ -31,6 +31,20 @@ async function getStaffAttendance(req, res) {
     }
 }
 
+async function getStaffAttendanceReport(req, res) {
+    const responseEntries = new ResponseEntry();
+    try {
+        responseEntries.data = await staffAttendanceServices.getStaffAttendanceReport(req.query);
+        if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
+    } catch (error) {
+        responseEntries.error = true;
+        responseEntries.message = error.message ? error.message : error;
+        responseEntries.code = responseCode.BAD_REQUEST;
+    } finally {
+        res.send(responseEntries);
+    }
+}
+
 async function createStaffAttendance(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
@@ -80,6 +94,13 @@ module.exports = async function (fastify) {
         url: '/staff-attendance',
         preHandler: verifyToken,
         handler: getStaffAttendance
+    });
+
+    fastify.route({
+        method: 'GET',
+        url: '/staff-attendance-report',
+        preHandler: verifyToken,
+        handler: getStaffAttendanceReport
     });
 
     fastify.route({

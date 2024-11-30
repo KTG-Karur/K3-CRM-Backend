@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const pump = require('pump');
 
-async function UploadStaffProff(req, res) {
+async function UploadImages(req, res) {
     const responseEntries = new ResponseEntry();
     try {
         const uploadDir = './uploads';
@@ -19,9 +19,11 @@ async function UploadStaffProff(req, res) {
 
         const staffProofDir = path.join(uploadDir, 'staff-proof');
         const claimProofDir = path.join(uploadDir, 'claim-proof');
+        const petrolAllowanceProofDir = path.join(uploadDir, 'petrol-allowance-proof');
 
         if (!fs.existsSync(staffProofDir)) fs.mkdirSync(staffProofDir);
         if (!fs.existsSync(claimProofDir)) fs.mkdirSync(claimProofDir);
+        if (!fs.existsSync(petrolAllowanceProofDir)) fs.mkdirSync(petrolAllowanceProofDir);
 
         const parts = await req.files();
         const files = [];
@@ -34,16 +36,23 @@ async function UploadStaffProff(req, res) {
                 if (part.fieldname === "staffProof") {
                     filePath = path.join(staffProofDir, fileName);
                     sequelize.models.staffProof.update({
-                        proof_image_name: fileName
+                        proof_image_name: `/uploads/staff-proof/${fileName}`
                     },
-                        { where: { staff_id: staff_id } }
+                        { where: { staff_id: req.params.id } }
                     );
                 } else if (part.fieldname === "claimProof") {
                     filePath = path.join(claimProofDir, fileName);
                     sequelize.models.claim.update({
-                        recepit_image_name: fileName
+                        recepit_image_name: `/uploads/claim-proof/${fileName}`
                     },
-                        { where: { claim_id: part.fields.recordId.value } }
+                        { where: { claim_id: req.params.id } }
+                    );
+                } else if (part.fieldname === "petrolAllowanceProof") {
+                    filePath = path.join(petrolAllowanceProofDir, fileName);
+                    sequelize.models.petrol_allowance.update({
+                        bill_image_name: `/uploads/petrol-allowance-proof/${fileName}`
+                    },
+                        { where: { petrol_allowance_id: req.params.id } }
                     );
                 } else {
                     filePath = path.join(uploadDir, fileName);
@@ -77,8 +86,8 @@ module.exports = async function (fastify) {
 
     fastify.route({
         method: 'POST',
-        url: '/upload-proof',
+        url: '/upload-proof/:id',
         preHandler: verifyToken,
-        handler: UploadStaffProff
+        handler: UploadImages
     });
 };
