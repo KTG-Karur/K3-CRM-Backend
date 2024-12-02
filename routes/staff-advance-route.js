@@ -11,7 +11,6 @@ const _ = require('lodash');
 const schema = {
     staffId: "number|required|integer|positive",
     amount: { type: "string", optional: false, min: 1, max: 100 },
-    advanceStatus: "number|required|integer|positive"
 }
 
 async function getStaffAdvance(req, res) {
@@ -67,6 +66,7 @@ async function updateStaffAdvance(req, res) {
         responseEntries.error = true;
         responseEntries.message = error.message ? error.message : error;
         responseEntries.code = error.code ? error.code : responseCode.BAD_REQUEST;
+        res.status(responseCode.BAD_REQUEST);
     } finally {
         res.send(responseEntries);
     }

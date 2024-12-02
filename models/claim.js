@@ -27,10 +27,18 @@ module.exports = (sequelize, DataTypes) => {
     recepit_image_name: DataTypes.STRING,
     claim_amount: DataTypes.STRING,
     apply_date: DataTypes.DATE,
-    claim_status: DataTypes.INTEGER,
     mode_of_payment_id: DataTypes.INTEGER,
     approved_by: DataTypes.INTEGER,
     approved_date: DataTypes.DATE,
+    bank_account_id: DataTypes.INTEGER,
+    status_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 28,
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'claim',

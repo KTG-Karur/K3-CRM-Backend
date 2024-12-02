@@ -40,7 +40,6 @@ async function getUser(query) {
 }
 
 async function createUser(postData) {
-  console.log(postData)
   const v = new Validator()
   try {
     const validationResponse = await v.validate(postData, schema)
@@ -56,7 +55,6 @@ async function createUser(postData) {
     return await getUser(req);
   }
   } catch (error) {
-    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

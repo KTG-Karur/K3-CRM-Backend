@@ -15,7 +15,10 @@ module.exports = {
       transfer_code: {
         type: Sequelize.STRING
       },
-      transfer_date: {
+      joining_date: {
+        type: Sequelize.DATE
+      },
+      relieving_date: {
         type: Sequelize.DATE
       },
       transfer_from: {
@@ -26,6 +29,14 @@ module.exports = {
       },
       transfered_by: {
         type: Sequelize.INTEGER
+      },
+      branch_id: {
+        type: Sequelize.INTEGER,
+      },
+      status_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 28
       },
       createdAt: {
         allowNull: false,

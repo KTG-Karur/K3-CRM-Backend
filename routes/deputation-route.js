@@ -9,9 +9,9 @@ const deputationServices = require("../service/deputation-service");
 const _ = require('lodash');
 
 const schema = {
-    staffId: "number|required|integer|positive",
-    fromPlace: { type: "string", optional: false, min: 1, max: 100 },
-    toPlace: { type: "string", optional: false, min: 1, max: 100 },
+    // staffId: "number|required|integer|positive",
+    fromPlace: "number|required|integer|positive",
+    toPlace: "number|required|integer|positive",
     //activityId: { type: "string", optional: false, min: 1, max: 100 },
     // totalKm: { type: "string", optional: false, min: 1, max: 100 },
     // amount: { type: "string", optional: false, min: 1, max: 100 },
@@ -69,6 +69,7 @@ async function updateDeputation(req, res) {
         responseEntries.error = true;
         responseEntries.message = error.message ? error.message : error;
         responseEntries.code = error.code ? error.code : responseCode.BAD_REQUEST;
+        res.status(responseCode.BAD_REQUEST);
     } finally {
         res.send(responseEntries);
     }

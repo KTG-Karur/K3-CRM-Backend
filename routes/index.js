@@ -10,6 +10,13 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require('./bank-account-route'));
   fastify.register(require('./proof-type-route'));
   fastify.register(require('./transfer-staff-route'));
+  fastify.register(require('./advance-payment-history-route'));
+  fastify.register(require('./attendance-incharge-route'));
+  fastify.register(require('./permission-route'));
+  fastify.register(require('./setting-route'));
+  fastify.register(require('./setting-benefit-route'));
+  fastify.register(require('./setting-leave-deduction-route'));
+  fastify.register(require('./setting-working-day-route'));
   fastify.register(require('./staff-advance-route'));
   fastify.register(require('./deputation-route'));
   fastify.register(require('./petrol-allowance-route'));
@@ -23,6 +30,13 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require('./staff-known-language-route'));
   fastify.register(require('./staff-proof-id-route'));
   fastify.register(require('./staff-relation-service'));
+  fastify.register(require('./staff-proof-upload-route'));
   fastify.register(require('./staff-leave-route'));
+  fastify.register(require("./staff-attendance-route"));
+  fastify.register(require("./staff-salary-history-route"));
+  fastify.register(require("./staff-onduty-route"));
+  fastify.register(require("./staff-rights-route"));
+  fastify.register(require("./training-type-route"));
+  fastify.register(require("./staff-training-route"));
   next();
 };

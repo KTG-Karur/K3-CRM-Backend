@@ -21,10 +21,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     staff_id: DataTypes.INTEGER,
     transfer_code: DataTypes.STRING,
-    transfer_date: DataTypes.DATE,
+    joining_date: DataTypes.DATE,
+    relieving_date: DataTypes.DATE,
     transfer_from: DataTypes.STRING,
     transfer_to: DataTypes.STRING,
-    transfered_by: DataTypes.INTEGER
+    transfered_by: DataTypes.INTEGER,
+    branch_id: DataTypes.INTEGER,
+    status_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 28,
+    },
   }, {
     sequelize,
     modelName: 'transfer_staff',

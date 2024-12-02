@@ -24,13 +24,22 @@ async function getTransferStaff(query) {
       }
     }
     const result = await sequelize.query(`SELECT ts.transfer_staff_id "transferStaffId",
-      ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
-      ts.transfer_code "transferCode", ts.transfer_date "transferDate",
-      ts.transfer_from "transferFrom", ts.transfer_to "transferTo",
+      ts.staff_id "staffId",CONCAT(sur.status_name,'.',s.first_name,' ',s.last_name) as staffName,
+      s.address "address",
+      ts.transfer_code "transferCode", ts.joining_date "joiningDate",
+      ts.relieving_date "relievingDate",
+      b.branch_id "transferFrom", b2.branch_id "transferTo",
+      b.branch_name "transferFromName", b2.branch_name "transferToName",
       ts.transfered_by "transferedById",CONCAT(s.first_name,' ',s.last_name) as transferedBy,
-      ts.createdAt
+      ts.createdAt,ts.status_id "statusId",
+      des.designation_name 'designationName',  dep.department_name 'departmentName'
       FROM transfer_staffs ts
+      left join branches b on b.branch_id = ts.transfer_from
+      left join branches b2 on b2.branch_id = ts.transfer_to
       left join staffs s on s.staff_id = ts.staff_id 
+      left join designation des on des.designation_id = s.designation_id 
+      left join department dep on dep.department_id = s.department_id
+      left join status_lists sur on sur.status_list_id = s.surname_id
       left join staffs s2 on s2.staff_id = ts.transfered_by ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,
@@ -57,27 +66,44 @@ async function createTransferStaff(postData) {
     postData.transferCode = await generateSerialNumber(applicantCodeFormat, count)
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
+
+    const existingTransferStaff = await sequelize.models.transfer_staff.findOne({
+      where: {
+        staff_id: excuteMethod.staff_id, joining_date: excuteMethod.joining_date
+      }
+    });
+    if (existingTransferStaff) {
+      throw new Error(messages.DUPLICATE_ENTRY);
+    }
+
     const transferStaffResult = await sequelize.models.transfer_staff.create(excuteMethod);
     const req = {
       transferStaffId: transferStaffResult.transfer_staff_id
     }
     return await getTransferStaff(req);
   } catch (error) {
-    console.log(error)
-    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+    throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 
 async function updateTransferStaff(transferStaffId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
+
+    const duplicateTransferStaff = await sequelize.models.transfer_staff.findOne({
+      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND joining_date = '${excuteMethod.joining_date}'   AND 	transfer_staff_id != ${transferStaffId}`)
+    });
+    if (duplicateTransferStaff) {
+      throw new Error(messages.DUPLICATE_ENTRY);
+    }
+
     const transferStaffResult = await sequelize.models.transfer_staff.update(excuteMethod, { where: { transfer_staff_id: transferStaffId } });
     const req = {
       transferStaffId: transferStaffId
     }
     return await getTransferStaff(req);
   } catch (error) {
-    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+    throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 

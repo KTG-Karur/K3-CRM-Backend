@@ -82,6 +82,27 @@ async function updateStaff(req, res) {
     }
 }
 
+async function deleteStaff(req, res) {
+    const responseEntries = new ResponseEntry();
+    const v = new Validator()
+    try {
+        const filteredSchema = _.pick(schema, Object.keys(req.body));
+        const validationResponse = v.validate(req.body, filteredSchema)
+        if (validationResponse != true) {
+            throw new Error(messages.VALIDATION_FAILED);
+        } else {
+            responseEntries.data = await staffServices.deleteStaff(req.params.staffId, req.body);
+            if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
+        }
+    } catch (error) {
+        responseEntries.error = true;
+        responseEntries.message = error.message ? error.message : error;
+        responseEntries.code = error.code ? error.code : responseCode.BAD_REQUEST;
+    } finally {
+        res.send(responseEntries);
+    }
+}
+
 
 module.exports = async function (fastify) {
     fastify.route({
@@ -110,5 +131,12 @@ module.exports = async function (fastify) {
         url: '/staff/:staffId',
         preHandler: verifyToken,
         handler: updateStaff
+    });
+
+    fastify.route({
+        method: 'PUT',
+        url: '/staff-delete/:staffId',
+        preHandler: verifyToken,
+        handler: deleteStaff
     });
 };

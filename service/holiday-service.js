@@ -14,24 +14,14 @@ async function getHoliday(query) {
       if (query.holidayId) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
-        iql += ` de.holiday_id = ${query.holidayId}`;
-      }
-      if (query.departmentId) {
-        iql += count >= 1 ? ` AND` : ``;
-        count++;
-        iql += ` de.department_id = ${query.departmentId}`;
-      }
-      if (query.isActive) {
-        iql += count >= 1 ? ` AND` : ``;
-        count++;
-        iql += ` de.is_active = ${query.isActive}`;
+        iql += ` holiday_id = ${query.holidayId}`;
       }
     }
-    const result = await sequelize.query(`SELECT holiday_id "holidayId", holiday_date "holidayDate", reason, createdAt FROM holidays ${iql}`, {
-        type: QueryTypes.SELECT,
-        raw: true,
-        nest: false
-      });
+    const result = await sequelize.query(`SELECT holiday_id "holidayId", is_active "isActive", holiday_date "holidayDate", reason, createdAt FROM holidays ${iql}`, {
+      type: QueryTypes.SELECT,
+      raw: true,
+      nest: false
+    });
     return result;
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
@@ -59,9 +49,9 @@ async function updateHoliday(holidayId, putData) {
       holidayId: holidayId
     }
     return await getHoliday(req);
-} catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
+  } catch (error) {
+    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
 }
 
 module.exports = {

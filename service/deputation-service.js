@@ -24,12 +24,19 @@ async function getDeputation(query) {
       }
     }
     const result = await sequelize.query(`SELECT ts.deputation_id "deputationId",
-      ts.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
-      ts.deputation_code "deputationCode", ts.deputation_date "deputationDate",
-      ts.from_date "fromDate", ts.to_date "toDate", ts.from_place "fromPlace", ts.to_place "toPlace", ts.	reason "reason",ts.deputation_by "deputationById",CONCAT(s.first_name,' ',s.last_name) as deputationBy,
+      ts.staff_id "staffId",CONCAT(sur.status_name,'.',s.first_name,' ',s.last_name) as staffName,
+      ts.deputation_code "deputationCode", ts.deputation_date "deputationDate", ts.status_id "statusId",
+      des.designation_name 'designationName',  dep.department_name 'departmentName',
+      ts.from_date "fromDate", ts.to_date "toDate", b.branch_id "fromPlace", b2.branch_id "toPlace",
+      b.branch_name "fromPlaceName", b2.branch_name "toPlaceName", ts.reason "reason",ts.deputation_by "deputationById",CONCAT(s.first_name,' ',s.last_name) as deputationBy,
       ts.createdAt
       FROM deputations ts
+      left join branches b on b.branch_id = ts.from_place
+      left join branches b2 on b2.branch_id = ts.to_place
       left join staffs s on s.staff_id = ts.staff_id 
+      left join designation des on des.designation_id = s.designation_id 
+      left join department dep on dep.department_id = s.department_id
+      left join status_lists sur on sur.status_list_id = s.surname_id
       left join staffs s2 on s2.staff_id = ts.deputation_by ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,
@@ -56,27 +63,46 @@ async function createDeputation(postData) {
     postData.deputationCode = await generateSerialNumber(applicantCodeFormat, count)
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
+
+    console.log("excuteMethod")
+    console.log(excuteMethod)
+    const existingDeputation = await sequelize.models.deputation.findOne({
+      where: {
+        staff_id: excuteMethod.staff_id, deputation_date: excuteMethod.deputation_date
+      }
+    });
+    if (existingDeputation) {
+      throw new Error(messages.DUPLICATE_ENTRY);
+    }
+
     const deputationResult = await sequelize.models.deputation.create(excuteMethod);
     const req = {
       deputationId: deputationResult.deputation_id
     }
     return await getDeputation(req);
   } catch (error) {
+    console.log("error")
     console.log(error)
-    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+    throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 
 async function updateDeputation(deputationId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
+    const duplicateDeputation = await sequelize.models.deputation.findOne({
+      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND deputation_date = '${excuteMethod.deputation_date}' AND deputation_id != '${excuteMethod.deputation_id}'`)
+    });
+    if (duplicateDeputation) {
+      throw new Error(messages.DUPLICATE_ENTRY);
+    }
     const deputationResult = await sequelize.models.deputation.update(excuteMethod, { where: { deputation_id: deputationId } });
     const req = {
       deputationId: deputationId
     }
     return await getDeputation(req);
   } catch (error) {
-    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+    throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
 

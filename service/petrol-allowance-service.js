@@ -38,15 +38,23 @@ async function getPetrolAllowance(query) {
       }
     }
 
-    const result = await sequelize.query(`SELECT pa.petrol_allowance_id "petrolAllowanceId", pa.staff_id "staffId",CONCAT(s.first_name,' ',s.last_name) as staffName,
+    const result = await sequelize.query(`SELECT pa.petrol_allowance_id "petrolAllowanceId", pa.staff_id "staffId",CONCAT(sur.status_name,'.',s.first_name,' ',s.last_name) as staffName,
+      des.designation_name 'designationName',  dep.department_name 'departmentName',
         pa.allowance_date "allowanceDate", pa.from_place "fromPlace", pa.to_place "toPlace",
         pa.activity_id "activityId",pa.is_active "isActive",
+        pa.branch_id "branchId",
+        b.branch_name "branchName",
+        s.staff_code "staffCode",
         GROUP_CONCAT(a.activity_name SEPARATOR ' & ') AS activityName,
-        pa.total_km "totalKm", pa.amount, pa.bill_no "billNo",
-        pa.bill_image_name "billImageName", pa.createdAt
+        pa.total_km "totalKm", pa.total_amount "totalAmount", pa.bill_no "billNo",
+        pa.name_of_dealer "nameOfDealer",
+       pa.bill_image_name "billImageName", pa.createdAt,pa.date_of_purchase "dateOfPurchase",pa.price_per_litre "pricePerLitre", pa.qty_per_litre "qtyPerLitre"
         FROM petrol_allowances pa
         LEFT join staffs s on s.staff_id = pa.staff_id 
-        LEFT join branches b on b.branch_id = s.branch_id 
+        LEFT join branches b on b.branch_id = s.branch_id  
+        LEFT join designation des on des.designation_id = s.designation_id 
+        LEFT join department dep on dep.department_id = s.department_id
+        LEFT join status_lists sur on sur.status_list_id = s.surname_id
         LEFT join activities a ON FIND_IN_SET(a.activity_id, pa.activity_id) ${iql}
         GROUP BY pa.petrol_allowance_id`, {
       type: QueryTypes.SELECT,

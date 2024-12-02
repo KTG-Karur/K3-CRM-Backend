@@ -26,7 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     contact_no: DataTypes.STRING,
     branch_admin_id: DataTypes.INTEGER,
-    is_active: DataTypes.BOOLEAN,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'branch',

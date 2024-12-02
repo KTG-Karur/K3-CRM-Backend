@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class staff_leave extends Model {
     /**
@@ -13,24 +11,33 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  staff_leave.init({
-    staff_leave_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+  staff_leave.init(
+    {
+      staff_leave_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      staff_id: DataTypes.INTEGER,
+      leave_type_id: DataTypes.INTEGER,
+      day_count: DataTypes.INTEGER,
+      reason: DataTypes.STRING,
+      from_date: DataTypes.DATE,
+      to_date: DataTypes.DATE,
+      spoken_date: DataTypes.DATE,
+      spoken_time: DataTypes.STRING,
+      spoken_staff_id: DataTypes.STRING,
+      approved_by: DataTypes.INTEGER,
+      branch_id: DataTypes.INTEGER,
+      status_id: {
+        type: DataTypes.INTEGER,
+        defaultValue: 28,
+      },
     },
-    staff_id: DataTypes.INTEGER,
-    leave_type_id: DataTypes.INTEGER,
-    day_count: DataTypes.INTEGER,
-    reason: DataTypes.STRING,
-    cancel_reason: DataTypes.STRING,
-    from_date: DataTypes.DATE,
-    to_date: DataTypes.DATE,
-    approved_by: DataTypes.INTEGER,
-    leave_status_id: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'staff_leave',
-  });
+    {
+      sequelize,
+      modelName: "staff_leave",
+    }
+  );
   return staff_leave;
 };

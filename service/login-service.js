@@ -38,13 +38,9 @@ async function getEmployeeLogin(query) {
             nest: false
         });
         const decrptPasswordData = await decrptPassword(result[0].password)
-        console.log(decrptPasswordData)
-        console.log(query.password)
         if(decrptPasswordData === query.password){
-            console.log("in---->")
             return result;
         }else{
-            console.log("entered--->")
             throw new Error(messages.INCORRECT_PASSWORD);
         }
     } catch (error) {
@@ -80,7 +76,6 @@ async function getUserLogin(query) {
         });
         if(result.length > 0){
             const decrptPasswordData = await decrptPassword(result[0].password)
-            console.log(decrptPasswordData)
             if(decrptPasswordData === query.password){
                 return result;
             }else{

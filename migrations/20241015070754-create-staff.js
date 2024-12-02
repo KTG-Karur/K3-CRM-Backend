@@ -75,6 +75,11 @@ module.exports = {
       martial_status_id: {
         type: Sequelize.INTEGER
       },
+      is_active: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: 1
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

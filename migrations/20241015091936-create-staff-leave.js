@@ -18,9 +18,6 @@ module.exports = {
       day_count: {
         type: Sequelize.INTEGER
       },
-      cancel_reason: {
-        type: Sequelize.STRING
-      },
       reason: {
         type: Sequelize.STRING
       },
@@ -30,10 +27,24 @@ module.exports = {
       to_date: {
         type: Sequelize.DATE
       },
-      approved_by: {
-        type: Sequelize.INTEGER
+      spoken_date: {
+        type: Sequelize.DATE
       },
-      leave_status_id: {
+      spoken_time: {
+        type: Sequelize.STRING
+      },
+      spoken_staff_id: {
+        type: Sequelize.STRING
+      },
+      branch_id: {
+        type: Sequelize.INTEGER,
+      },
+      status_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 28
+      },
+      approved_by: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -43,6 +54,7 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE
       }
+
     });
   },
   async down(queryInterface, Sequelize) {

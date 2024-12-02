@@ -25,10 +25,22 @@ module.exports = (sequelize, DataTypes) => {
     to_place: DataTypes.STRING,
     activity_id: DataTypes.STRING,
     total_km: DataTypes.INTEGER,
-    amount: DataTypes.STRING,
-    bill_no: DataTypes.STRING,
     bill_image_name: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN,
+    bill_no: DataTypes.STRING,
+    date_of_purchase: DataTypes.DATE,
+    name_of_dealer: DataTypes.STRING,
+    price_per_litre: DataTypes.STRING,
+    qty_per_litre: DataTypes.STRING,
+    total_amount: DataTypes.STRING,
+    branch_id: DataTypes.INTEGER,
+    status_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 28,
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'petrol_allowance',

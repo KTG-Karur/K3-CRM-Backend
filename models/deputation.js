@@ -27,7 +27,15 @@ module.exports = (sequelize, DataTypes) => {
     from_place: DataTypes.STRING,
     to_place: DataTypes.STRING,
     reason: DataTypes.STRING,
-    deputation_by: DataTypes.INTEGER
+    deputation_by: DataTypes.INTEGER,
+    status_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 28,
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
   }, {
     sequelize,
     modelName: 'deputation',

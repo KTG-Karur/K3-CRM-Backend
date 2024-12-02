@@ -15,7 +15,6 @@ const schema = {
     branchId: "number|required|integer|positive",
     // applyDate: { type: "string", optional: false, min: 1, max: 100 },
     modeOfPaymentId: "number|required|integer|positive",
-    claimStatus: "number|required|integer|positive",
 }
 
 async function getClaim(req, res) {

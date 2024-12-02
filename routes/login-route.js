@@ -47,7 +47,7 @@ async function getUserLogin(req, res) {
 }
 
 function getEmployee(req, res){
-    console.log("login---<>"+req)
+    // console.log("login---<>"+req)
     const email = "vensrini0414@gmail.com"
     // const token = fastify.jwt.sign({email : email}, { expiresIn: '1h' })
     const token = fastify.jwt.sign({email : email}, { expiresIn: '1h' })

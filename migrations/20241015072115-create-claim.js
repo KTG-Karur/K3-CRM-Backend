@@ -36,14 +36,25 @@ module.exports = {
       apply_date: {
         type: Sequelize.DATE
       },
-      claim_status: {
-        type: Sequelize.INTEGER
-      },
       mode_of_payment_id: {
         type: Sequelize.INTEGER
       },
       approved_date: {
         type: Sequelize.DATE
+      },
+      bank_account_id: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
+      status_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 28
+      },
+      is_active: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,
