@@ -3,6 +3,7 @@
 const sequelize = require('../models/index').sequelize;
 const messages = require("../helpers/message");
 const _ = require('lodash');
+const { createRolePermission } = require('./role-permission-service');
 
 async function getRole(query) {
   try {
@@ -33,8 +34,10 @@ async function createRole(postData) {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
     const roleResult = await sequelize.models.role.create(excuteMethod);
     const req = {
-      roleId: roleResult.role_id
+      roleId: roleResult.role_id,
+      accessIds : postData.accessIds
     }
+    const rolePermission = createRolePermission(req)
     return await getRole(req);
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);

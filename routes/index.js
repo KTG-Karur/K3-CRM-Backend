@@ -38,5 +38,6 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require("./staff-rights-route"));
   fastify.register(require("./training-type-route"));
   fastify.register(require("./staff-training-route"));
+  fastify.register(require("./role-permission-route"));
   next();
 };
