@@ -32,6 +32,20 @@ async function getPetrolAllowance(req, res) {
     }
 }
 
+async function getPetrolReportAllowance(req, res) {
+    const responseEntries = new ResponseEntry();
+    try {
+        responseEntries.data = await petrolAllowanceServices.getPetrolReportAllowance(req.query);
+        if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
+    } catch (error) {
+        responseEntries.error = true;
+        responseEntries.message = error.message ? error.message : error;
+        responseEntries.code = responseCode.BAD_REQUEST;
+    } finally {
+        res.send(responseEntries);
+    }
+}
+
 async function createPetrolAllowance(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
@@ -81,6 +95,13 @@ module.exports = async function (fastify) {
         url: '/petrol-allowance',
         preHandler: verifyToken,
         handler: getPetrolAllowance
+    });
+
+    fastify.route({
+        method: 'GET',
+        url: '/petrol-allowance-report',
+        preHandler: verifyToken,
+        handler: getPetrolReportAllowance
     });
 
     fastify.route({
