@@ -50,14 +50,14 @@ async function createRolePermission(postData) {
 
 async function updateRolePermission(rolePermissionId, putData) {
   try {
+    const selectedId = putData.rolePermissionId
+    delete putData.rolePermissionId
+    console.log(putData)
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key));
-    const rolePermissionResult = await sequelize.models.role_permission.update(excuteMethod, { where: { role_permission_id: rolePermissionId } });
-    // const req = {
-    //   rolePermissionId: rolePermissionId
-    // }
-    // return await getRolePermission(req);
+    const rolePermissionResult = await sequelize.models.role_permission.update(excuteMethod, { where: { role_permission_id: selectedId } });
     return true;
   } catch (error) {
+    console.log(error)
     throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

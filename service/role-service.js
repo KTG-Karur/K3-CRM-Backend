@@ -3,7 +3,7 @@
 const sequelize = require('../models/index').sequelize;
 const messages = require("../helpers/message");
 const _ = require('lodash');
-const { createRolePermission } = require('./role-permission-service');
+const { createRolePermission, updateRolePermission } = require('./role-permission-service');
 
 async function getRole(query) {
   try {
@@ -47,12 +47,25 @@ async function createRole(postData) {
 async function updateRole(roleId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
-    const roleResult = await sequelize.models.role.update(excuteMethod, { where: { role_id: roleId } });
-    const req = {
-      roleId: roleId
+    if(putData.isActive === 0){
+      const roleResult = await sequelize.models.role.update(excuteMethod, { where: { role_id: roleId } });
+      const req = {
+        roleId: roleId,
+      }
+      return await getRole(req);
+    }else{
+      const roleResult = await sequelize.models.role.update(excuteMethod, { where: { role_id: roleId } });
+      const req = {
+        roleId: roleId,
+        accessIds : putData.accessIds,
+        rolePermissionId : putData.rolePermissionId
+      }
+      const rolePermission = updateRolePermission(null, req)
+      return await getRole(req);
     }
-    return await getRole(req);
+    
 } catch (error) {
+  console.log(error)
   throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
 }
 }
