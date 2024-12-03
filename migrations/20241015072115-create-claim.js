@@ -46,6 +46,22 @@ module.exports = {
         allowNull: true,
         type: Sequelize.INTEGER,
       },
+      purchased_bill_no: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
+      purchased_bill_amount: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
+      purchased_bill_date: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
+      eligible_amount: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
       status_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
