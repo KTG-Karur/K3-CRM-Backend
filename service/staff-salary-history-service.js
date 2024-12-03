@@ -9,6 +9,8 @@ const { generateSerialNumber } = require('../utils/utility');
 
 async function getStaffSalaryHistory(query) {
   try {
+    console.log("query.salaryDate")
+    console.log(query?.salaryDate)
     let iql = "";
     let count = 0;
     if (query && Object.keys(query).length) {

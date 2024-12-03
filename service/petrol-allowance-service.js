@@ -94,7 +94,6 @@ async function getPetrolAllowance(query) {
   }
 }
 
-
 async function getPetrolReportAllowance(query) {
   console.log("first")
   try {
