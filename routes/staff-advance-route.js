@@ -27,13 +27,27 @@ async function getStaffAdvance(req, res) {
     }
 }
 
+async function getStaffAdvanceLedger(req, res) {
+    const responseEntries = new ResponseEntry();
+    try {
+        responseEntries.data = await staffAdvanceServices.getStaffAdvanceLedger(req.query);
+        if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
+    } catch (error) {
+        responseEntries.error = true;
+        responseEntries.message = error.message ? error.message : error;
+        responseEntries.code = responseCode.BAD_REQUEST;
+    } finally {
+        res.send(responseEntries);
+    }
+}
+
 async function createStaffAdvance(req, res) {
-   
+
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
         const validationResponse = await v.validate(req.body, schema)
-        
+
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
@@ -93,5 +107,12 @@ module.exports = async function (fastify) {
         url: '/staff-advance/:staffAdvanceId',
         preHandler: verifyToken,
         handler: updateStaffAdvance
+    });
+
+    fastify.route({
+        method: 'GET',
+        url: '/staff-advance-ledger',
+        preHandler: verifyToken,
+        handler: getStaffAdvanceLedger
     });
 };
