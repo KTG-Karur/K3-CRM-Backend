@@ -28,7 +28,8 @@ async function UploadImages(req, res) {
         const parts = await req.files();
         const files = [];
         const otherFields = {};
-        let claimId = 1;
+        console.log("parts")
+        console.log(parts)
         for await (const part of parts) {
             if (part.file) {
                 let filePath = '';
@@ -47,6 +48,8 @@ async function UploadImages(req, res) {
                     },
                         { where: { claim_id: req.params.id } }
                     );
+                    console.log("part.fieldname")
+                    console.log(part.fieldname)
                 } else if (part.fieldname === "petrolAllowanceProof") {
                     filePath = path.join(petrolAllowanceProofDir, fileName);
                     sequelize.models.petrol_allowance.update({

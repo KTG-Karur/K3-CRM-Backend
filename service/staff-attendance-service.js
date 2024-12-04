@@ -116,7 +116,7 @@ async function getStaffAttendanceReport(query) {
         if (query.durationId) { // Month and year based
           iql += count >= 1 ? ` AND` : ``;
           count++;
-          iql += ` ts.attendance_date BETWEEN '${moment(query.attendanceDate).startOf(query.durationId == 2 ? 'year' : 'month').format('YYYY-MM-DD')}' AND '${moment(query.attendanceDate).endOf(query.durationId == 2 ? 'year' : 'month').format('YYYY-MM-DD')}'`;
+          iql += ` ts.attendance_date BETWEEN '${moment(query.attendanceDate).startOf( query.durationId == 2 ? 'year' : 'month').format('YYYY-MM-DD')}' AND '${moment(query.attendanceDate).endOf(query.durationId == 2 ? 'year' : 'month').format('YYYY-MM-DD')}'`;
         }
       }
       if (query.branchId || query.branchId == '') {

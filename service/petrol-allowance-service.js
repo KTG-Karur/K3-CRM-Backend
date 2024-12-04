@@ -48,11 +48,31 @@ async function getPetrolAllowance(query) {
         count++;
         iql += ` pa.is_active = ${query.isActive}`;
       }
+      if (query.durationId) { // Month and year based for Report
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` pa.allowance_date BETWEEN '${moment(query.allowanceDate).startOf(query.durationId == 1 ? 'year' : 'month').format('YYYY-MM-DD')}' AND '${moment(query.allowanceDate).endOf(query.durationId == 1 ? 'year' : 'month').format('YYYY-MM-DD')}'`;
+      }
+      if (query.branchId || query.branchId == '') {
+        if (query.branchId !== '') {
+          iql += count >= 1 ? ` AND` : ``;
+          count++;
+          iql += ` s.branch_id = ${query.branchId}`;
+        }
+      }
+      if (query.departmentId || query.departmentId == '') {
+        if (query.departmentId !== '') {
+          iql += count >= 1 ? ` AND` : ``;
+          count++;
+          iql += ` s.department_id = ${query.departmentId}`;
+        }
+      }
     }
 
     const result = await sequelize.query(`
       SELECT pa.petrol_allowance_id "petrolAllowanceId", 
              pa.staff_id "staffId", 
+             s.staff_code "staffCode", 
              CONCAT(sur.status_name, '.', s.first_name, ' ', s.last_name) as staffName,
              des.designation_name 'designationName',  
              dep.department_name 'departmentName',
@@ -95,7 +115,6 @@ async function getPetrolAllowance(query) {
 }
 
 async function getPetrolReportAllowance(query) {
-  console.log("first")
   try {
     let iql = "";
     let count = 0;
@@ -106,12 +125,10 @@ async function getPetrolReportAllowance(query) {
         count++;
         iql += ` pa.staff_id = ${query.staffId} `;
       }
-
       if (query.dateFilter) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
         iql += ` MONTH(pa.allowance_date) = '${moment(query.dateFilter).format("MM")}'`;
-        console.log(iql);
       }
     }
 

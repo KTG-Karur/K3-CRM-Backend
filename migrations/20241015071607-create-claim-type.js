@@ -12,6 +12,9 @@ module.exports = {
       claim_type_name: {
         type: Sequelize.STRING
       },
+      eligible_amount: {
+        type: Sequelize.INTEGER
+      },
       is_active: {
         allowNull: false,
         type: Sequelize.BOOLEAN,

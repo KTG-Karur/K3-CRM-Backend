@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     claim_type_name: DataTypes.STRING,
+    eligible_amount: DataTypes.INTEGER,
     is_active: {
       type: DataTypes.BOOLEAN,
       defaultValue: 1
