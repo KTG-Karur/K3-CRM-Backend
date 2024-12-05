@@ -21,9 +21,10 @@ module.exports = {
       proof_image_name: {
         type: Sequelize.STRING
       },
-      createdAt: {
+       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         type: Sequelize.DATE

@@ -198,8 +198,6 @@ async function getStaffDetails(query) {
 
 async function createStaff(postData) {
   try {
-    console.log("postData")
-    console.log(postData)
     const applicantCodeFormat = `K3-STAFF-`
     const personalInfoData = postData.personalInfoData
 
