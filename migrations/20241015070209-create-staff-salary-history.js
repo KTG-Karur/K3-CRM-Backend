@@ -39,9 +39,10 @@ module.exports = {
       total_salary_amount: {
         type: Sequelize.STRING
       },
-      createdAt: {
+       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         type: Sequelize.DATE

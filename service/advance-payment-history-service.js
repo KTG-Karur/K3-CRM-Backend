@@ -12,7 +12,7 @@ async function getAdvancePaymentHistory(query) {
     let count = 0;
     if (query && Object.keys(query).length) {
       iql += `WHERE`;
-      if (query.staffAdvanceId) {
+      if (query.staffAdvanceId) { 
         iql += count >= 1 ? ` AND` : ``;
         count++;
         iql += ` ts.staff_advance_id = ${query.staffAdvanceId}`;

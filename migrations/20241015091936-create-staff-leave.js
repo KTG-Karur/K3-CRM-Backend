@@ -47,9 +47,10 @@ module.exports = {
       approved_by: {
         type: Sequelize.INTEGER
       },
-      createdAt: {
+       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         type: Sequelize.DATE

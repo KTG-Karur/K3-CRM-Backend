@@ -2,8 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('staff_salary_allocateds', {
-      staff_salary_allocated_id: {
+    await queryInterface.createTable('salary_increament_histories', {
+      salary_increament_history_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -12,10 +12,7 @@ module.exports = {
       staff_id: {
         type: Sequelize.INTEGER
       },
-      annual_amount: {
-        type: Sequelize.STRING
-      },
-      monthly_amount: {
+      salary_amount: {
         type: Sequelize.STRING
       },
       esi_amount: {
@@ -23,6 +20,15 @@ module.exports = {
       },
       pf_amount: {
         type: Sequelize.STRING
+      },
+      annual_amount: {
+        type: Sequelize.STRING
+      },
+      increament_date: {
+        type: Sequelize.DATE
+      },
+      increament_by: {
+        type: Sequelize.INTEGER
       },
        createdAt: {
         allowNull: false,
@@ -35,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('staff_salary_allocateds');
+    await queryInterface.dropTable('salary_increament_histories');
   }
 };
