@@ -13,6 +13,7 @@ const { createStaffQualification, updateStaffQualification } = require('./staff-
 const { createStaffRelation, updateStaffRelation } = require('./staff-relation-service');
 const { createStaffProof, updateStaffProof } = require('./staff-proof-id-service');
 const { createStaffSalaryAllocate, updateStaffSalaryAllocate } = require('./staff-salary-allocate-service');
+const { createStaffAchievement, updateStaffAchievement } = require('./staff-achievement-service');
 
 async function getStaff(query) {
   try {
@@ -85,12 +86,22 @@ async function getStaffDetails(query) {
     const personalInfoData = await sequelize.query(`
       SELECT st.staff_id "staffId",st.surname_id "surnameId", st.staff_code "staffCode",
       st.first_name "firstName", st.last_name "lastName", st.age "age", st.address "address", 
-      st.caste_type_id "casteTypeId", st.contact_no "contactNo", st.dob,
+      st.caste_type_id "casteTypeId",cst.status_name "casteName", st.contact_no "contactNo", st.dob,
       st.alternative_contact_no "alternativeContactNo", st.email_id "emailId",
+      st.staff_profile_image_name "staffProfileImageName",st.expected_salary "expectedSalary",
+      st.time_to_join_id "timeToJoinId", timetojoin.status_name "timeToJoinName", st.preferred_location_id "preferredLocationId",
+        GROUP_CONCAT(br.branch_name SEPARATOR ', ') AS "preferenceLocationList",
+      st.repatriate "repatriate",st.references_by "referencesBy",st.working_at_repco_institution "workingAtRepcoInstitution",
+      st.working_at_repco_institution_description "workingAtRepcoInstitutionDescription",
+      st.other_information "otherInformation",
       st.gender_id "genderId", st.martial_status_id "martialStatusId"
       FROM staffs st
       left join status_lists sur on sur.status_list_id = st.surname_id
+      left join status_lists cst on cst.status_list_id = st.caste_type_id
       left join status_lists g on g.status_list_id = st.gender_id
+      left join branches br on FIND_IN_SET(br.branch_id, st.preferred_location_id)
+      LEFT JOIN staffs ref ON FIND_IN_SET(ref.staff_id, st.staff_id)
+      left join status_lists timetojoin on timetojoin.status_list_id = st.time_to_join_id
       left join status_lists ms on ms.status_list_id = st.martial_status_id  ${iql}`, {
       type: QueryTypes.SELECT,
       raw: true,
@@ -181,6 +192,20 @@ async function getStaffDetails(query) {
       nest: false
     });
 
+    const achievements = await sequelize.query(`
+     SELECT st.staff_achievement_id "staffAchievementId", st.staff_id "staffId",
+        st.achievement_at_id "achievementAtId",st.achievement_title_id "achievementTitleId", st.achievement_details "achievementDetails", ac_at.status_name "achievementAtName",
+        ac_tit.status_name "achievementTitleName",
+         st.createdAt
+        FROM staff_achievements st
+        left join status_lists ac_at  on ac_at.status_list_id = st.achievement_at_id
+        left join status_lists ac_tit on ac_tit.status_list_id = st.achievement_title_id
+         ${iql}`, {
+      type: QueryTypes.SELECT,
+      raw: true,
+      nest: false
+    });
+
     const result = {
       personalInfo: personalInfoData[0],
       jobRoleDetails: jobRoleDetails[0],
@@ -188,7 +213,8 @@ async function getStaffDetails(query) {
       workExperience: workExperience,
       staffQualification: staffQualification,
       staffDetails: staffDetails,
-      language: language
+      language: language,
+      achievements: achievements
     }
     return result;
   } catch (error) {
@@ -198,8 +224,6 @@ async function getStaffDetails(query) {
 
 async function createStaff(postData) {
   try {
-    console.log("postData")
-    console.log(postData)
     const applicantCodeFormat = `K3-STAFF-`
     const personalInfoData = postData.personalInfoData
 
@@ -231,8 +255,6 @@ async function createStaff(postData) {
 
     //  Staff Creation
     const excuteMethod = _.mapKeys(personalInfoData, (value, key) => _.snakeCase(key))
-    console.log("excuteMethod");
-    console.log(excuteMethod);
     const staffResult = await sequelize.models.staff.create(excuteMethod);
 
     //work experience Creation
@@ -260,13 +282,16 @@ async function createStaff(postData) {
     salaryAllocate.staffId = staffResult.staff_id
     const salaryAllocateRes = await createStaffSalaryAllocate(salaryAllocate)
 
+    //staff  Achievements
+    const staffAchievementData = postData.staffAchievements.map((v, i) => ({ ...v, staffId: staffResult.staff_id, }))
+    const staffAchievementRes = await createStaffAchievement(staffAchievementData)
+
+
     const req = {
       staffId: staffResult.staff_id
     }
     return await getStaff(req);
   } catch (error) {
-    console.log("error")
-    console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
@@ -313,6 +338,11 @@ async function updateStaff(staffId, putData) {
     // Relation Details
     const relationData = putData.staffDetails
     const relationRes = await updateStaffRelation(staffId, relationData)
+
+    //staff  Achievements
+    const staffAchievementData = putData.staffAchievements
+    const staffAchievementRes = await updateStaffAchievement(staffId, staffAchievementData)
+
 
     const req = {
       staffId: staffId

@@ -7,6 +7,15 @@ module.exports = {
       {
         role_name: "Super Admin"
       },
+      {
+        role_name: "Admin"
+      },
+      {
+        role_name: "Employee"
+      },
+      {
+        role_name: "Senior Employee"
+      },
     ]);
   },
 

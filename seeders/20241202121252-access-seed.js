@@ -19,6 +19,12 @@ module.exports = {
       {
         access_name: "Print"
       },
+      {
+        access_name: "Approved"
+      },
+      {
+        access_name: "Rejected"
+      },
     ]);
   },
 

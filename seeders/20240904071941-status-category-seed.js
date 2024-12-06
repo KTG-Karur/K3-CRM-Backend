@@ -43,6 +43,15 @@ module.exports = {
       {
         status_category_name: "Surname Type"
       },
+      {
+        status_category_name: "Time to Join"
+      },
+      {
+        status_category_name: "Achievements At"
+      },
+      {
+        status_category_name: "Achievements Title"
+      },
     ]);
   },
 

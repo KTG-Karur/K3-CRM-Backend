@@ -11,24 +11,16 @@ module.exports = {
         department_id : 1
       },
       {
-        designation_name : "Staff",
+        designation_name : "Developer",
         department_id : 1
       },
       {
-        designation_name : "Manager",
-        department_id : 2
+        designation_name : "Designer",
+        department_id : 1
       },
       {
-        designation_name : "Staff",
-        department_id : 2
-      },
-      {
-        designation_name : "Manager",
-        department_id : 3
-      },
-      {
-        designation_name : "Staff",
-        department_id : 3
+        designation_name : "Digital Marketing",
+        department_id : 1
       },
      ]);
   },
