@@ -91,6 +91,14 @@ async function getStaffDetails(query) {
       st.staff_profile_image_name "staffProfileImageName",st.expected_salary "expectedSalary",
       st.time_to_join_id "timeToJoinId", timetojoin.status_name "timeToJoinName", st.preferred_location_id "preferredLocationId",
         GROUP_CONCAT(br.branch_name SEPARATOR ', ') AS "preferenceLocationList",
+         CONCAT('[', GROUP_CONCAT(
+    JSON_OBJECT(
+        'staffName', CONCAT(ref.first_name, ' ', ref.last_name),
+        'contactNo', ref.contact_no,
+        'emailId', ref.email_id
+    ) 
+    SEPARATOR ','
+), ']') AS referenceList,
       st.repatriate "repatriate",st.references_by "referencesBy",st.working_at_repco_institution "workingAtRepcoInstitution",
       st.working_at_repco_institution_description "workingAtRepcoInstitutionDescription",
       st.other_information "otherInformation",
