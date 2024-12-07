@@ -27,10 +27,11 @@ module.exports = function routesPlugin(fastify, opts, next) {
   fastify.register(require('./holiday-route'));
   fastify.register(require('./staff-work-experience-route'));
   fastify.register(require('./staff-qualification-route'));
+  fastify.register(require('./staff-achievement-route'));
   fastify.register(require('./staff-known-language-route'));
   fastify.register(require('./staff-proof-id-route'));
   fastify.register(require('./staff-relation-service'));
-  fastify.register(require('./staff-proof-upload-route'));
+  fastify.register(require('./proof-upload-route'));
   fastify.register(require('./staff-leave-route'));
   fastify.register(require("./staff-attendance-route"));
   fastify.register(require("./staff-salary-history-route"));

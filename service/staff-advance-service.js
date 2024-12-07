@@ -46,6 +46,91 @@ async function getStaffAdvance(query) {
   }
 }
 
+
+async function getStaffAdvanceLedger(query) {
+  try {
+    let iql = "";
+    let count = 0;
+    if (query && Object.keys(query).length) {
+      iql += `WHERE`;
+      if (query.staffAdvanceId) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` ts.staff_advance_id = ${query.staffAdvanceId}`;
+      }
+      if (query.staffId) {
+        iql += count >= 1 ? ` AND` : ``;
+        count++;
+        iql += ` s.staff_id = ${query.staffId}`;
+      }
+    }
+    const result = await sequelize.query(`SELECT 
+    CONCAT(s.first_name, ' ', s.last_name) AS "staffName",
+    s.staff_code AS "staffCode",
+    s.staff_id AS "staffId",
+    s.contact_no AS "contactNo",
+    dep.department_name "departmentName",
+    des.designation_name "designationName",
+    b.branch_name "branchName",
+    t.date AS "date",
+    CASE 
+        WHEN t.transaction_type = 'credit' THEN t.amount 
+        ELSE '' 
+    END AS "credit",
+    CASE 
+        WHEN t.transaction_type = 'debit' THEN t.amount 
+        ELSE '' 
+    END AS "debit"
+    FROM (
+    SELECT 
+        ts.staff_id, 
+        ts.apply_date AS "date",
+        'credit' AS "transaction_type", 
+        ts.amount AS "amount"
+    FROM 
+        staff_advances AS ts
+    UNION ALL
+    SELECT 
+        ts.staff_id, 
+        ad_pay.paid_date AS "date",
+        'debit' AS "transaction_type", 
+        ad_pay.paid_amount AS "amount"
+    FROM 
+        advance_payment_histories AS ad_pay
+    INNER JOIN 
+        staff_advances AS ts 
+    ON 
+        ad_pay.staff_advance_id = ts.staff_advance_id
+    ) AS t
+    LEFT JOIN 
+    staffs AS s 
+    ON 
+    s.staff_id = t.staff_id 
+    LEFT JOIN 
+    department AS dep
+    ON 
+    dep.department_id = s.department_id 
+    LEFT JOIN 
+    designation AS des
+    ON 
+    des.designation_id = s.designation_id 
+    LEFT JOIN 
+    branches AS b
+    ON 
+    b.branch_id = s.branch_id 
+      ${iql}
+    ORDER BY 
+    t.date ASC;`, {
+      type: QueryTypes.SELECT,
+      raw: true,
+      nest: false
+    });
+    return result;
+  } catch (error) {
+    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
+}
+
 async function createStaffAdvance(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
@@ -93,5 +178,6 @@ async function updateStaffAdvance(staffAdvanceId, putData) {
 module.exports = {
   getStaffAdvance,
   updateStaffAdvance,
-  createStaffAdvance
+  createStaffAdvance,
+  getStaffAdvanceLedger
 };

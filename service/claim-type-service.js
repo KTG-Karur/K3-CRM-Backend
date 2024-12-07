@@ -17,6 +17,7 @@ async function getClaimType(query) {
     }
     const result = await sequelize.models.claim_type.findAll({
       attributes: [['claim_type_id', 'claimTypeId'], ['claim_type_name', 'claimTypeName'],
+      ['eligible_amount', 'eligibleAmount'],
       ['is_active', 'isActive'], ['createdAt', 'createdAt']],
       where: iql,
       order: [['claim_type_id', 'DESC']],
@@ -50,9 +51,9 @@ async function updateClaimType(claimTypeId, putData) {
       claimTypeId: claimTypeId
     }
     return await getClaimType(req);
-} catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
+  } catch (error) {
+    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
 }
 
 module.exports = {

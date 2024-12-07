@@ -30,6 +30,33 @@ module.exports = {
       caste_type_id: {
         type: Sequelize.INTEGER
       },
+      staff_profile_image_name: {
+        type: Sequelize.STRING
+      },
+      expected_salary: {
+        type: Sequelize.STRING
+      },
+      time_to_join_id: {
+        type: Sequelize.STRING
+      },
+      preferred_location_id: {
+        type: Sequelize.STRING
+      },
+      repatriate: {
+        type: Sequelize.INTEGER
+      },
+      references_by: {
+        type: Sequelize.STRING
+      },
+      working_at_repco_institution: {
+        type: Sequelize.INTEGER
+      },
+      working_at_repco_institution_description: {
+        type: Sequelize.STRING
+      },
+      other_information: {
+        type: Sequelize.STRING
+      },
       contact_no: {
         type: Sequelize.STRING
       },
@@ -37,9 +64,6 @@ module.exports = {
         type: Sequelize.STRING
       },
       email_id: {
-        type: Sequelize.STRING
-      },
-      profile_image_name: {
         type: Sequelize.STRING
       },
       department_id: {

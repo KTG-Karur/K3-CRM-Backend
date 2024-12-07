@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class staff extends Model {
     /**
      * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
+     * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
@@ -26,10 +26,20 @@ module.exports = (sequelize, DataTypes) => {
     age: DataTypes.INTEGER,
     address: DataTypes.STRING,
     caste_type_id: DataTypes.INTEGER,
+
+    staff_profile_image_name: DataTypes.STRING,
+    expected_salary: DataTypes.STRING,
+    time_to_join_id: DataTypes.STRING,
+    preferred_location_id: DataTypes.STRING,
+    repatriate: DataTypes.INTEGER,
+    references_by: DataTypes.STRING,
+    working_at_repco_institution: DataTypes.INTEGER,
+    working_at_repco_institution_description: DataTypes.STRING,
+    other_information: DataTypes.STRING,
+
     contact_no: DataTypes.STRING,
     alternative_contact_no: DataTypes.STRING,
     email_id: DataTypes.STRING,
-    profile_image_name: DataTypes.STRING,
     department_id: DataTypes.INTEGER,
     designation_id: DataTypes.INTEGER,
     bank_account_id: DataTypes.INTEGER,
