@@ -9,8 +9,6 @@ const { generateSerialNumber } = require('../utils/utility');
 
 async function getStaffSalaryHistory(query) {
   try {
-    console.log("query.salaryDate")
-    console.log(query?.salaryDate)
     let iql = "";
     let count = 0;
     if (query && Object.keys(query).length) {
@@ -28,7 +26,7 @@ async function getStaffSalaryHistory(query) {
       if (query.salaryDate) {
         iql += count >= 1 ? ` AND` : ``;
         count++;
-        iql += ` ts.salary_date = ${moment(query.salaryDate).year()} AND ts.salary_date = ${moment(query.salaryDate).month()}`;
+        iql += ` YEAR(ts.salary_date) = '${moment(query.salaryDate).year()}' AND MONTH(ts.salary_date) = '${moment(query.salaryDate).month()}'`;
       }
       if (query.branchId) {
         iql += count >= 1 ? ` AND` : ``;
@@ -41,51 +39,53 @@ async function getStaffSalaryHistory(query) {
         iql += ` s.department_id = ${query.departmentId}`;
       }
     }
-    const result = await sequelize.query(`SELECT
-    ts.staff_salary_history_id AS staffSalaryHistoryId,
-    s.staff_id AS staffId,
-    CONCAT(s.first_name, ' ', s.last_name) AS staffName,
-    ts.salary_amount AS salaryAmount,
-    ts.salary_date AS salaryDate,
-    ts.deduction_amount AS deductionAmount,
-    ts.esi_amount AS esiAmount,
-    ts.pf_amount AS pfAmount,
-    ts.incentive AS incentive,
-    ts.total_salary_amount AS totalSalaryAmount,
-    b.branch_name AS branchName,
-    ssa.annual_amount AS annualAmount,
-    ssa.monthly_amount AS monthlyAmount,
-    ssa.esi_amount AS ssaEsiAmount,
-    ssa.pf_amount AS ssaPfAmount, 
-    SUM(sl.day_count) AS leaveCount,
-    SUM(saa.amount) AS advanceAmount,
-    SUM(saa.paid_amount) AS paidAdvanceAmount,
-    ts.createdAt
-FROM
-    staffs s
-LEFT JOIN
-    branches b ON b.branch_id = s.branch_id
-LEFT JOIN
-    staff_attendances sa ON sa.staff_id = s.staff_id or ( ts.staff_id is null ) 
-LEFT JOIN
-    staff_salary_allocateds ssa ON ssa.staff_id = s.staff_id or ( ts.staff_id is null ) 
-LEFT JOIN
-    staff_salary_histories ts ON ts.staff_id = s.staff_id or ( ts.staff_id is null ) 
-LEFT JOIN
-    staff_advances saa ON saa.staff_id = s.staff_id or ( ts.staff_id is null ) 
-LEFT JOIN
-    staff_leaves sl ON sl.staff_id = s.staff_id  or ( ts.staff_id is null )    
-    ${iql} GROUP BY 
-    s.staff_id, 
-    YEAR(ts.salary_date), 
-    MONTH(ts.salary_date)
-ORDER BY 
-    s.staff_id`, {
-      type: QueryTypes.SELECT,
-      raw: true,
-      nest: false
-    });
-    return result;
+    console.log(iql)
+    return true;
+//     const result = await sequelize.query(`SELECT
+//     ts.staff_salary_history_id AS staffSalaryHistoryId,
+//     s.staff_id AS staffId,
+//     CONCAT(s.first_name, ' ', s.last_name) AS staffName,
+//     ts.salary_amount AS salaryAmount,
+//     ts.salary_date AS salaryDate,
+//     ts.deduction_amount AS deductionAmount,
+//     ts.esi_amount AS esiAmount,
+//     ts.pf_amount AS pfAmount,
+//     ts.incentive AS incentive,
+//     ts.total_salary_amount AS totalSalaryAmount,
+//     b.branch_name AS branchName,
+//     ssa.annual_amount AS annualAmount,
+//     ssa.monthly_amount AS monthlyAmount,
+//     ssa.esi_amount AS ssaEsiAmount,
+//     ssa.pf_amount AS ssaPfAmount, 
+//     SUM(sl.day_count) AS leaveCount,
+//     SUM(saa.amount) AS advanceAmount,
+//     SUM(saa.paid_amount) AS paidAdvanceAmount,
+//     ts.createdAt
+// FROM
+//     staffs s
+// LEFT JOIN
+//     branches b ON b.branch_id = s.branch_id
+// LEFT JOIN
+//     staff_attendances sa ON sa.staff_id = s.staff_id or ( ts.staff_id is null ) 
+// LEFT JOIN
+//     staff_salary_allocateds ssa ON ssa.staff_id = s.staff_id or ( ts.staff_id is null ) 
+// LEFT JOIN
+//     staff_salary_histories ts ON ts.staff_id = s.staff_id or ( ts.staff_id is null ) 
+// LEFT JOIN
+//     staff_advances saa ON saa.staff_id = s.staff_id or ( ts.staff_id is null ) 
+// LEFT JOIN
+//     staff_leaves sl ON sl.staff_id = s.staff_id  or ( ts.staff_id is null )    
+//     ${iql} GROUP BY 
+//     s.staff_id, 
+//     YEAR(ts.salary_date), 
+//     MONTH(ts.salary_date)
+// ORDER BY 
+//     s.staff_id`, {
+//       type: QueryTypes.SELECT,
+//       raw: true,
+//       nest: false
+//     });
+//     return result;
   } catch (error) {
     console.log(error)
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);

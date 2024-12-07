@@ -73,7 +73,7 @@ module.exports = async function (fastify) {
     fastify.route({
         method: 'GET',
         url: '/staff-salary-history',
-        preHandler: verifyToken,
+        // preHandler: verifyToken,
         handler: getStaffSalaryHistory
     });
 
