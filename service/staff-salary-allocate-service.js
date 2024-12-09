@@ -24,7 +24,7 @@ async function getStaffSalaryAllocate(query) {
     }
     }
     const result = await sequelize.query(`SELECT sa.staff_salary_allocated_id "staffSalaryAllocatedId", CONCAT(s.first_name, ' ', s.last_name) AS staffName,
-        a.staff_id "staffId", sa.annual_amount "annualAmount", sa.monthly_amount "monthlyAmount",s.staff_code "staffCode",s.contact_no "contactNo",
+        s.staff_id "staffId", sa.annual_amount "annualAmount", sa.monthly_amount "monthlyAmount",s.staff_code "staffCode",s.contact_no "contactNo",
         sa.esi_amount "esiAmount", sa.pf_amount "pfAmount", sa.createdAt
         FROM staff_salary_allocateds sa
         left join staffs s on s.staff_id = sa.staff_id  ${iql}`, {

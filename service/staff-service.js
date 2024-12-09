@@ -291,7 +291,7 @@ async function createStaff(postData) {
     const salaryAllocateRes = await createStaffSalaryAllocate(salaryAllocate)
 
     //staff  Achievements
-    const staffAchievementData = postData.staffAchievements.map((v, i) => ({ ...v, staffId: staffResult.staff_id, }))
+    const staffAchievementData = postData.staffAchievements.map((v, i) => ({ ...v, staffId: staffResult.staff_id }))
     const staffAchievementRes = await createStaffAchievement(staffAchievementData)
 
 
