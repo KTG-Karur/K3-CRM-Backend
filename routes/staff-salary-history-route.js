@@ -26,6 +26,20 @@ async function getStaffSalaryHistory(req, res) {
     }
 }
 
+async function getStaffSalaryHistoryDetails(req, res) {
+    const responseEntries = new ResponseEntry();
+    try {
+        responseEntries.data = await staffSalaryHistoryServices.getStaffSalaryHistoryDetails(req.query);
+        if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
+    } catch (error) {
+        responseEntries.error = true;
+        responseEntries.message = error.message ? error.message : error;
+        responseEntries.code = responseCode.BAD_REQUEST;
+    } finally {
+        res.send(responseEntries);
+    }
+}
+
 async function createStaffSalaryHistory(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
@@ -75,6 +89,12 @@ module.exports = async function (fastify) {
         url: '/staff-salary-history',
         // preHandler: verifyToken,
         handler: getStaffSalaryHistory
+    });
+    fastify.route({
+        method: 'GET',
+        url: '/staff-salary-history-details',
+        // preHandler: verifyToken,
+        handler: getStaffSalaryHistoryDetails
     });
 
     fastify.route({

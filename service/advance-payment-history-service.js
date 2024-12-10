@@ -43,10 +43,7 @@ async function getAdvancePaymentHistory(query) {
 
 async function createAdvancePaymentHistory(postData) {
   try {
-
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
-    console.log("excuteMethod");
-    console.log(excuteMethod);
     const advancePaymentHistoryResult = await sequelize.models.advance_payment_history.create(excuteMethod);
     const req = {
       advancePaymentHistoryId: advancePaymentHistoryResult.advance_payment_history_id
