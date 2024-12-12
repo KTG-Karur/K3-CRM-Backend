@@ -22,12 +22,14 @@ module.exports = (sequelize, DataTypes) => {
     staff_id: DataTypes.INTEGER,
     branch_id: DataTypes.INTEGER,
     department_id: DataTypes.INTEGER,
-    salary_date: DataTypes.DATE,
-    salary_amount: DataTypes.STRING,
-    deduction_amount: DataTypes.STRING,
+    salary_date: DataTypes.DATEONLY,
+    monthly_amount: DataTypes.STRING,
+    incentive_amount: DataTypes.STRING,
+    bonus_amount: DataTypes.STRING,
     esi_amount: DataTypes.STRING,
     pf_amount: DataTypes.STRING,
     incentive: DataTypes.STRING,
+    deduction_amount: DataTypes.STRING,
     total_salary_amount: DataTypes.STRING
   }, {
     sequelize,

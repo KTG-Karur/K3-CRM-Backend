@@ -9,7 +9,7 @@ const staffSalaryHistoryServices = require("../service/staff-salary-history-serv
 const _ = require('lodash');
 
 const schema = {
-    staffId: "number|required|integer|positive",
+    // staffId: "number|required|integer|positive",
 }
 
 async function getStaffSalaryHistory(req, res) {
@@ -44,7 +44,7 @@ async function createStaffSalaryHistory(req, res) {
     const responseEntries = new ResponseEntry();
     const v = new Validator()
     try {
-        const validationResponse = await v.validate(req.body, schema)
+        const validationResponse = await v.validate(req.body, schema);
         if (validationResponse != true) {
             throw new Error(messages.VALIDATION_FAILED);
         } else {
@@ -87,13 +87,13 @@ module.exports = async function (fastify) {
     fastify.route({
         method: 'GET',
         url: '/staff-salary-history',
-        // preHandler: verifyToken,
+        preHandler: verifyToken,
         handler: getStaffSalaryHistory
     });
     fastify.route({
         method: 'GET',
         url: '/staff-salary-history-details',
-        // preHandler: verifyToken,
+        preHandler: verifyToken,
         handler: getStaffSalaryHistoryDetails
     });
 

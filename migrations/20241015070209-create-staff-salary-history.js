@@ -19,12 +19,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       salary_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
-      salary_amount: {
-        type: Sequelize.STRING
-      },
-      deduction_amount: {
+      monthly_amount: {
         type: Sequelize.STRING
       },
       esi_amount: {
@@ -33,7 +30,13 @@ module.exports = {
       pf_amount: {
         type: Sequelize.STRING
       },
-      incentive: {
+      incentive_amount: {
+        type: Sequelize.STRING
+      },
+      bonus_amount: {
+        type: Sequelize.STRING
+      },
+      deduction_amount: {
         type: Sequelize.STRING
       },
       total_salary_amount: {

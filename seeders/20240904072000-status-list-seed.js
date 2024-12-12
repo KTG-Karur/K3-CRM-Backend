@@ -123,11 +123,11 @@ module.exports = {
       //-----Start Leave Type------//
       {
         status_category_id: 9,
-        status_name: "CL"
+        status_name: "Casual Leave"
       },
       {
         status_category_id: 9,
-        status_name: "SL"
+        status_name: "Sick Leave"
       },
       //-----Ends------//
       //-----Claim Status------//
