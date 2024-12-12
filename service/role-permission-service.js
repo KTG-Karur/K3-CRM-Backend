@@ -6,7 +6,7 @@ const _ = require('lodash');
 const { QueryTypes } = require('sequelize');
 
 async function getRolePermission(query) {
-
+console.log(query)
   try {
     let iql = "";
     let count = 0;
@@ -23,6 +23,7 @@ async function getRolePermission(query) {
         iql += ` rp.role_id = ${query.roleId}`;
       }
     }
+    console.log(iql)
     const result = await sequelize.query(`SELECT rp.role_permission_id "rolePermissionId", rp.access_ids "accessIds",
       rp.role_id "roleId",r.role_name "roleName" 
       FROM role_permission rp
