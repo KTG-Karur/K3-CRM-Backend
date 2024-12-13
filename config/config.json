@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "k3_crm_management",
+    "database": "k3_crm_management_aravind",
     "host": "localhost",
     "dialect": "mysql"
   },

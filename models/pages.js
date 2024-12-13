@@ -22,7 +22,12 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     parent_id: DataTypes.INTEGER,
     icon_name: DataTypes.STRING,
-    page_name: DataTypes.STRING
+    page_name: DataTypes.STRING,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
+    }
+
   }, {
     sequelize,
     modelName: 'pages',

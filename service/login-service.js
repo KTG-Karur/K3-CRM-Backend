@@ -40,8 +40,8 @@ async function getEmployeeLogin(query) {
             raw: true,
             nest: false
         });
-        const decrptPasswordData = await decrptPassword(result[0].password)
         if (result.length > 0) {
+            const decrptPasswordData = await decrptPassword(result[0]?.password)
             if (decrptPasswordData === query.password) {
                 const queryReq = {
                     roleId: result[0].roleId
@@ -144,14 +144,12 @@ async function getEmployeeLogin(query) {
                 ]
                 return returnRes;
             } else {
-               
                 throw new Error(messages.INCORRECT_PASSWORD);
             }
         } else {
             throw new Error(messages.INVALID_USER);
         }
     } catch (error) {
-        console.log(error)
         throw new Error(error);
     }
 }

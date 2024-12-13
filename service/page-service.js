@@ -17,6 +17,11 @@ async function getPage(query) {
                 count++;
                 iql += ` pa.page_id = ${query.pageId}`;
             }
+            if (query.isActive) {
+                iql += count >= 1 ? ` AND` : ``;
+                count++;
+                iql += ` pa.is_active = ${query.isActive}`;
+            }
         }
         const result = await sequelize.query(`SELECT 
     pa.page_id AS "pageId",pa.page_id AS "id",
@@ -32,7 +37,8 @@ async function getPage(query) {
     FROM pages pa
     LEFT JOIN pages p ON p.page_id = pa.parent_id
     LEFT JOIN access a ON FIND_IN_SET(a.access_id, pa.access_ids) > 0
-    GROUP BY pa.page_id ${iql}`, {
+    ${iql}
+    GROUP BY pa.page_id `, {
             type: QueryTypes.SELECT,
             raw: true,
             nest: false

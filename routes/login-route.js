@@ -14,8 +14,8 @@ async function getEmployeeLogin(req, res) {
   const responseEntries = new ResponseEntry();
   try {
     responseEntries.data = await loginServices.getEmployeeLogin(req.query);
-    const data  = req.query
-    const token = fastify.jwt.sign({email : data.email})
+    const data = req.query
+    const token = fastify.jwt.sign({ email: data.email })
     responseEntries.token = token
     if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
   } catch (error) {
@@ -23,6 +23,7 @@ async function getEmployeeLogin(req, res) {
     responseEntries.message = error.message;
     responseEntries.code = responseCode.UNAUTHORIZED;
     responseEntries.token = null
+    res.status(responseCode.UNAUTHORIZED);
   } finally {
     res.send(responseEntries);
   }
@@ -32,8 +33,8 @@ async function getUserLogin(req, res) {
   const responseEntries = new ResponseEntry();
   try {
     responseEntries.data = await loginServices.getUserLogin(req.query);
-    const data  = req.query
-    const token = fastify.jwt.sign({email : data.userName})
+    const data = req.query
+    const token = fastify.jwt.sign({ email: data.userName })
     responseEntries.token = token
     if (!responseEntries.data) responseEntries.message = messages.DATA_NOT_FOUND;
   } catch (error) {
@@ -46,42 +47,42 @@ async function getUserLogin(req, res) {
   }
 }
 
-function getEmployee(req, res){
-    // console.log("login---<>"+req)
-    const email = "vensrini0414@gmail.com"
-    // const token = fastify.jwt.sign({email : email}, { expiresIn: '1h' })
-    const token = fastify.jwt.sign({email : email}, { expiresIn: '1d' })
-    res.send({ hello: 'world',token : token })
+function getEmployee(req, res) {
+  // console.log("login---<>"+req)
+  const email = "vensrini0414@gmail.com"
+  // const token = fastify.jwt.sign({email : email}, { expiresIn: '1h' })
+  const token = fastify.jwt.sign({ email: email }, { expiresIn: '1d' })
+  res.send({ hello: 'world', token: token })
 }
 
-function createEmployee(req, res){
-  res.send({ hello: 'world'})
+function createEmployee(req, res) {
+  res.send({ hello: 'world' })
 }
 
 
 module.exports = async function (fastify) {
-    fastify.route({
-      method: 'GET',
-      url: '/login',
-      handler: getEmployee
-    });
+  fastify.route({
+    method: 'GET',
+    url: '/login',
+    handler: getEmployee
+  });
 
-    fastify.route({
-      method: 'GET',
-      url: '/user-login',
-      handler: getUserLogin
-    });
+  fastify.route({
+    method: 'GET',
+    url: '/user-login',
+    handler: getUserLogin
+  });
 
-    fastify.route({
-      method: 'GET',
-      url: '/organization-login',
-      handler: getEmployeeLogin
-    });
-  
-    fastify.route({
-      method: 'POST',
-      url: '/login',
-      preHandler: verifyToken,
-      handler: createEmployee
-    });
-  };
+  fastify.route({
+    method: 'GET',
+    url: '/organization-login',
+    handler: getEmployeeLogin
+  });
+
+  fastify.route({
+    method: 'POST',
+    url: '/login',
+    preHandler: verifyToken,
+    handler: createEmployee
+  });
+};
