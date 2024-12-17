@@ -26,6 +26,7 @@ async function getRolePermission(req, res) {
         responseEntries.error = true;
         responseEntries.message = error.message ? error.message : error;
         responseEntries.code = responseCode.BAD_REQUEST;
+        res.status(responseCode.BAD_REQUEST);
     } finally {
         res.send(responseEntries);
     }

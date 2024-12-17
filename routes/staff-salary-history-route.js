@@ -21,6 +21,7 @@ async function getStaffSalaryHistory(req, res) {
         responseEntries.error = true;
         responseEntries.message = error.message ? error.message : error;
         responseEntries.code = responseCode.BAD_REQUEST;
+        res.status(responseCode.BAD_REQUEST);
     } finally {
         res.send(responseEntries);
     }
@@ -35,6 +36,7 @@ async function getStaffSalaryHistoryDetails(req, res) {
         responseEntries.error = true;
         responseEntries.message = error.message ? error.message : error;
         responseEntries.code = responseCode.BAD_REQUEST;
+        res.status(responseCode.BAD_REQUEST);
     } finally {
         res.send(responseEntries);
     }
@@ -77,6 +79,7 @@ async function updateStaffSalaryHistory(req, res) {
         responseEntries.error = true;
         responseEntries.message = error.message ? error.message : error;
         responseEntries.code = error.code ? error.code : responseCode.BAD_REQUEST;
+        res.status(responseCode.BAD_REQUEST);
     } finally {
         res.send(responseEntries);
     }

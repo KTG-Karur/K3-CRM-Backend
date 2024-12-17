@@ -48,25 +48,7 @@ async function getUserLogin(req, res) {
   }
 }
 
-function getEmployee(req, res) {
-  // console.log("login---<>"+req)
-  const email = "vensrini0414@gmail.com"
-  // const token = fastify.jwt.sign({email : email}, { expiresIn: '1h' })
-  const token = fastify.jwt.sign({ email: email }, { expiresIn: '1d' })
-  res.send({ hello: 'world', token: token })
-}
-
-function createEmployee(req, res) {
-  res.send({ hello: 'world' })
-}
-
-
 module.exports = async function (fastify) {
-  fastify.route({
-    method: 'GET',
-    url: '/login',
-    handler: getEmployee
-  });
 
   fastify.route({
     method: 'GET',
@@ -80,10 +62,4 @@ module.exports = async function (fastify) {
     handler: getEmployeeLogin
   });
 
-  fastify.route({
-    method: 'POST',
-    url: '/login',
-    preHandler: verifyToken,
-    handler: createEmployee
-  });
 };

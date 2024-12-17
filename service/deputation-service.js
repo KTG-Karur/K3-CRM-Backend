@@ -81,8 +81,6 @@ async function createDeputation(postData) {
     }
     return await getDeputation(req);
   } catch (error) {
-    console.log("error")
-    console.log(error)
     throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }

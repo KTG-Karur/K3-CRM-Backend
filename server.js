@@ -1,5 +1,5 @@
 'use strict';
-const PORT = "5007" || "5059"
+const PORT = "5007"
 
 const start = async ()=>{
     try {
