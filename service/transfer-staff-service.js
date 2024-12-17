@@ -90,11 +90,13 @@ async function updateTransferStaff(transferStaffId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
 
-    const duplicateTransferStaff = await sequelize.models.transfer_staff.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND joining_date = '${excuteMethod.joining_date}'   AND 	transfer_staff_id != ${transferStaffId}`)
-    });
-    if (duplicateTransferStaff) {
-      throw new Error(messages.DUPLICATE_ENTRY);
+    if (excuteMethod?.staff_id || false && excuteMethod?.joining_date || false) {
+      const duplicateTransferStaff = await sequelize.models.transfer_staff.findOne({
+        where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND joining_date = '${excuteMethod.joining_date}'   AND 	transfer_staff_id != ${transferStaffId}`)
+      });
+      if (duplicateTransferStaff) {
+        throw new Error(messages.DUPLICATE_ENTRY);
+      }
     }
 
     const transferStaffResult = await sequelize.models.transfer_staff.update(excuteMethod, { where: { transfer_staff_id: transferStaffId } });

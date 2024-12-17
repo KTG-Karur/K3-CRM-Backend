@@ -86,19 +86,14 @@ async function createStaffOnDuty(postData) {
         nest: false,
       }
     );
-    console.log("checkPerviousApplyOnDuty")
-    console.log(checkPerviousApplyOnDuty)
 
     if (checkPerviousApplyOnDuty.length <= 0) {
       const excuteMethod = _.mapKeys(postData, (value, key) =>
         _.snakeCase(key)
       );
-      console.log("excuteMethod")
       const staffOnDutyResult = await sequelize.models.staff_onduties.create(
         excuteMethod
       );
-      console.log("staffOnDutyResult")
-      console.log(staffOnDutyResult)
       const req = {
         staffOnDutyId: staffOnDutyResult.staff_onduty_id,
       };

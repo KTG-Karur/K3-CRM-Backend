@@ -42,6 +42,7 @@ async function getUserLogin(req, res) {
     responseEntries.message = error.message;
     responseEntries.code = responseCode.UNAUTHORIZED;
     responseEntries.token = null
+    res.status(responseCode.UNAUTHORIZED);
   } finally {
     res.send(responseEntries);
   }
