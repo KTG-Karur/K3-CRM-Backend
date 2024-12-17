@@ -35,13 +35,15 @@ async function getBranch(query) {
 async function createBranch(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
-    const existingBranch = await sequelize.models.branch.findOne({
-      where: {
-        branch_name: excuteMethod.branch_name
+    if (excuteMethod?.branch_name || false) {
+      const existingBranch = await sequelize.models.branch.findOne({
+        where: {
+          branch_name: excuteMethod.branch_name
+        }
+      });
+      if (existingBranch) {
+        throw new Error(messages.DUPLICATE_ENTRY);
       }
-    });
-    if (existingBranch) {
-      throw new Error(messages.DUPLICATE_ENTRY);
     }
 
     const branchResult = await sequelize.models.branch.create(excuteMethod);
@@ -60,11 +62,13 @@ async function updateBranch(branchId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key));
 
-    const duplicateBranch = await sequelize.models.branch.findOne({
-      where: sequelize.literal(`branch_name = '${excuteMethod.branch_name}' AND branch_id != ${branchId}`)
-    });
-    if (duplicateBranch) {
-      throw new Error(messages.DUPLICATE_ENTRY);
+    if (excuteMethod?.branch_name || false) {
+      const duplicateBranch = await sequelize.models.branch.findOne({
+        where: sequelize.literal(`branch_name = '${excuteMethod.branch_name}' AND branch_id != ${branchId}`)
+      });
+      if (duplicateBranch) {
+        throw new Error(messages.DUPLICATE_ENTRY);
+      }
     }
     const branchResult = await sequelize.models.branch.update(excuteMethod, { where: { branch_id: branchId } });
     const req = {

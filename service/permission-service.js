@@ -57,17 +57,19 @@ async function getPermission(query) {
 async function createPermission(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
-    const existingPermission = await sequelize.models.permission.findOne({
-      where: {
-        staff_id: excuteMethod.staff_id,
-        permission_date: sequelize.where(
-          sequelize.fn('DATE', sequelize.col('permission_date')),
-          excuteMethod.permission_date
-        )
+    if (excuteMethod?.permission_date || false && excuteMethod?.staff_id || false) {
+      const existingPermission = await sequelize.models.permission.findOne({
+        where: {
+          staff_id: excuteMethod.staff_id,
+          permission_date: sequelize.where(
+            sequelize.fn('DATE', sequelize.col('permission_date')),
+            excuteMethod.permission_date
+          )
+        }
+      });
+      if (existingPermission) {
+        throw new Error(messages.DUPLICATE_ENTRY);
       }
-    });
-    if (existingPermission) {
-      throw new Error(messages.DUPLICATE_ENTRY);
     }
 
     const permissionResult = await sequelize.models.permission.create(excuteMethod);
@@ -83,11 +85,14 @@ async function createPermission(postData) {
 async function updatePermission(permissionId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
-    const duplicatePermission = await sequelize.models.permission.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND permission_date = '${excuteMethod.permission_date}' AND permission_id != ${permissionId}`)
-    });
-    if (duplicatePermission) {
-      throw new Error(messages.DUPLICATE_ENTRY);
+
+    if (excuteMethod?.permission_date || false && excuteMethod?.staff_id || false) {
+      const duplicatePermission = await sequelize.models.permission.findOne({
+        where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND permission_date = '${excuteMethod.permission_date}' AND permission_id != ${permissionId}`)
+      });
+      if (duplicatePermission) {
+        throw new Error(messages.DUPLICATE_ENTRY);
+      }
     }
 
     const permissionResult = await sequelize.models.permission.update(excuteMethod, { where: { permission_id: permissionId } });

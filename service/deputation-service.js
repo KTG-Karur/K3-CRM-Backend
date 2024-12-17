@@ -64,15 +64,15 @@ async function createDeputation(postData) {
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
 
-    console.log("excuteMethod")
-    console.log(excuteMethod)
-    const existingDeputation = await sequelize.models.deputation.findOne({
-      where: {
-        staff_id: excuteMethod.staff_id, deputation_date: excuteMethod.deputation_date
+    if (excuteMethod?.staff_id || false && excuteMethod?.deputation_date || false) {
+      const existingDeputation = await sequelize.models.deputation.findOne({
+        where: {
+          staff_id: excuteMethod.staff_id, deputation_date: excuteMethod.deputation_date
+        }
+      });
+      if (existingDeputation) {
+        throw new Error(messages.DUPLICATE_ENTRY);
       }
-    });
-    if (existingDeputation) {
-      throw new Error(messages.DUPLICATE_ENTRY);
     }
 
     const deputationResult = await sequelize.models.deputation.create(excuteMethod);
@@ -90,11 +90,13 @@ async function createDeputation(postData) {
 async function updateDeputation(deputationId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
-    const duplicateDeputation = await sequelize.models.deputation.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND deputation_date = '${excuteMethod.deputation_date}' AND deputation_id != '${excuteMethod.deputation_id}'`)
-    });
-    if (duplicateDeputation) {
-      throw new Error(messages.DUPLICATE_ENTRY);
+    if (excuteMethod?.staff_id || false && excuteMethod?.deputation_date || false) {
+      const duplicateDeputation = await sequelize.models.deputation.findOne({
+        where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND deputation_date = '${excuteMethod.deputation_date}' AND deputation_id != '${deputationId}'`)
+      });
+      if (duplicateDeputation) {
+        throw new Error(messages.DUPLICATE_ENTRY);
+      }
     }
     const deputationResult = await sequelize.models.deputation.update(excuteMethod, { where: { deputation_id: deputationId } });
     const req = {

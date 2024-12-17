@@ -134,13 +134,15 @@ async function getStaffAdvanceLedger(query) {
 async function createStaffAdvance(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
-    const existingStaffAdvance = await sequelize.models.staff_advance.findOne({
-      where: {
-        staff_id: excuteMethod.staff_id, apply_date: excuteMethod.apply_date
+    if (excuteMethod?.staff_id || false && excuteMethod?.apply_date || false) {
+      const existingStaffAdvance = await sequelize.models.staff_advance.findOne({
+        where: {
+          staff_id: excuteMethod.staff_id, apply_date: excuteMethod.apply_date
+        }
+      });
+      if (existingStaffAdvance) {
+        throw new Error(messages.DUPLICATE_ENTRY);
       }
-    });
-    if (existingStaffAdvance) {
-      throw new Error(messages.DUPLICATE_ENTRY);
     }
 
     const staffAdvanceResult = await sequelize.models.staff_advance.create(excuteMethod);
@@ -158,11 +160,13 @@ async function updateStaffAdvance(staffAdvanceId, putData) {
 
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
 
-    const duplicateStaffAdvance = await sequelize.models.staff_advance.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND apply_date = '${excuteMethod.apply_date}' AND staff_advance_id != '${staffAdvanceId}'`)
-    });
-    if (duplicateStaffAdvance) {
-      throw new Error(messages.DUPLICATE_ENTRY);
+    if (excuteMethod?.staff_id || false && excuteMethod?.apply_date || false) {
+      const duplicateStaffAdvance = await sequelize.models.staff_advance.findOne({
+        where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND apply_date = '${excuteMethod.apply_date}' AND staff_advance_id != '${staffAdvanceId}'`)
+      });
+      if (duplicateStaffAdvance) {
+        throw new Error(messages.DUPLICATE_ENTRY);
+      }
     }
 
     const staffAdvanceResult = await sequelize.models.staff_advance.update(excuteMethod, { where: { staff_advance_id: staffAdvanceId } });

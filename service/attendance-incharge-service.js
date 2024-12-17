@@ -45,13 +45,15 @@ async function createAttendanceIncharge(postData) {
   try {
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
-    const existingAttendanceIncharge = await sequelize.models.attendance_incharge.findOne({
-      where: {
-        staff_id: excuteMethod.staff_id, branch_id: excuteMethod.branch_id, department_id: excuteMethod.department_id
+    if (excuteMethod?.staff_id || false && excuteMethod?.branch_id || false && excuteMethod?.department_id || false) {
+      const existingAttendanceIncharge = await sequelize.models.attendance_incharge.findOne({
+        where: {
+          staff_id: excuteMethod.staff_id, branch_id: excuteMethod.branch_id, department_id: excuteMethod.department_id
+        }
+      });
+      if (existingAttendanceIncharge) {
+        throw new Error(messages.DUPLICATE_ENTRY);
       }
-    });
-    if (existingAttendanceIncharge) {
-      throw new Error(messages.DUPLICATE_ENTRY);
     }
     const attendanceInchargeResult = await sequelize.models.attendance_incharge.create(excuteMethod);
     const req = {
@@ -67,11 +69,13 @@ async function updateAttendanceIncharge(attendanceInchargeId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
 
-    const duplicateAttendanceIncharge = await sequelize.models.attendance_incharge.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND branch_id = '${excuteMethod.branch_id}' AND department_id = '${excuteMethod.department_id}'   AND 	attendance_incharge_id != ${attendanceInchargeId}`)
-    });
-    if (duplicateAttendanceIncharge) {
-      throw new Error(messages.DUPLICATE_ENTRY);
+    if (excuteMethod?.staff_id || false && excuteMethod?.branch_id || false && excuteMethod?.department_id || false) {
+      const duplicateAttendanceIncharge = await sequelize.models.attendance_incharge.findOne({
+        where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND branch_id = '${excuteMethod.branch_id}' AND department_id = '${excuteMethod.department_id}'   AND 	attendance_incharge_id != ${attendanceInchargeId}`)
+      });
+      if (duplicateAttendanceIncharge) {
+        throw new Error(messages.DUPLICATE_ENTRY);
+      }
     }
 
     const attendanceInchargeResult = await sequelize.models.attendance_incharge.update(excuteMethod, { where: { attendance_incharge_id: attendanceInchargeId } });

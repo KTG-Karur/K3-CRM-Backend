@@ -31,10 +31,10 @@ async function getDesignation(query) {
         de.designation_name "designationName", de.is_active "isActive", de.createdAt, de.updatedAt
         FROM designation de
         left join department d on d.department_id = de.department_id ${iql}`, {
-        type: QueryTypes.SELECT,
-        raw: true,
-        nest: false
-      });
+      type: QueryTypes.SELECT,
+      raw: true,
+      nest: false
+    });
     return result;
   } catch (error) {
     throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
@@ -44,13 +44,15 @@ async function getDesignation(query) {
 async function createDesignation(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
-    const existingDesignation = await sequelize.models.designation.findOne({
-      where: {
-        name: excuteMethod.name
+    if (excuteMethod?.name || false) {
+      const existingDesignation = await sequelize.models.designation.findOne({
+        where: {
+          name: excuteMethod.name
+        }
+      });
+      if (existingDesignation) {
+        throw new Error(error.errors[0].message ? error.errors[0].message : messages.DUPLICATE_ENTRY);
       }
-    });
-    if (existingDesignation) {
-      throw new Error(error.errors[0].message ? error.errors[0].message : messages.DUPLICATE_ENTRY);
     }
     const designationResult = await sequelize.models.designation.create(excuteMethod);
     const req = {
@@ -65,14 +67,24 @@ async function createDesignation(postData) {
 async function updateDesignation(designationId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
+    if (excuteMethod?.name || false) {
+      const existingDesignation = await sequelize.models.designation.findOne({
+        where: {
+          name: excuteMethod.name
+        }
+      });
+      if (existingDesignation) {
+        throw new Error(error.errors[0].message ? error.errors[0].message : messages.DUPLICATE_ENTRY);
+      }
+    }
     const designationResult = await sequelize.models.designation.update(excuteMethod, { where: { designation_id: designationId } });
     const req = {
       designationId: designationId
     }
     return await getDesignation(req);
-} catch (error) {
-  throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
+  } catch (error) {
+    throw new Error(error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
 }
 
 module.exports = {

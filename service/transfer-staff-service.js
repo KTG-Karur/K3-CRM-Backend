@@ -67,13 +67,16 @@ async function createTransferStaff(postData) {
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
 
-    const existingTransferStaff = await sequelize.models.transfer_staff.findOne({
-      where: {
-        staff_id: excuteMethod.staff_id, joining_date: excuteMethod.joining_date
+
+    if (excuteMethod?.staff_id || false && excuteMethod?.joining_date || false) {
+      const existingTransferStaff = await sequelize.models.transfer_staff.findOne({
+        where: {
+          staff_id: excuteMethod.staff_id, joining_date: excuteMethod.joining_date
+        }
+      });
+      if (existingTransferStaff) {
+        throw new Error(messages.DUPLICATE_ENTRY);
       }
-    });
-    if (existingTransferStaff) {
-      throw new Error(messages.DUPLICATE_ENTRY);
     }
 
     const transferStaffResult = await sequelize.models.transfer_staff.create(excuteMethod);

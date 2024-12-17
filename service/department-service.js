@@ -32,13 +32,15 @@ async function getDepartment(query) {
 async function createDepartment(postData) {
   try {
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
-    const existingDepartment = await sequelize.models.department.findOne({
-      where: {
-        department_name: excuteMethod.department_name
+    if (excuteMethod?.department_name || false) {
+      const existingDepartment = await sequelize.models.department.findOne({
+        where: {
+          department_name: excuteMethod.department_name
+        }
+      });
+      if (existingDepartment) {
+        throw new Error(messages.DUPLICATE_ENTRY);
       }
-    });
-    if (existingDepartment) {
-      throw new Error(messages.DUPLICATE_ENTRY);
     }
     const departmentResult = await sequelize.models.department.create(excuteMethod);
     const req = {
@@ -53,11 +55,13 @@ async function createDepartment(postData) {
 async function updateDepartment(departmentId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
-    const duplicateDepartment = await sequelize.models.department.findOne({
-      where: sequelize.literal(`department_id != '${excuteMethod.department_id}' AND department_name = '${excuteMethod.department_name}'`)
-    });
-    if (duplicateDepartment) {
-      throw new Error(messages.DUPLICATE_ENTRY);
+    if (excuteMethod?.department_name || false) {
+      const duplicateDepartment = await sequelize.models.department.findOne({
+        where: sequelize.literal(`department_id != '${excuteMethod.department_id}' AND department_name = '${excuteMethod.department_name}'`)
+      });
+      if (duplicateDepartment) {
+        throw new Error(messages.DUPLICATE_ENTRY);
+      }
     }
 
     const departmentResult = await sequelize.models.department.update(excuteMethod, { where: { department_id: departmentId } });
@@ -65,9 +69,9 @@ async function updateDepartment(departmentId, putData) {
       departmentId: departmentId
     }
     return await getDepartment(req);
-} catch (error) {
-  throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
-}
+  } catch (error) {
+    throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
+  }
 }
 
 module.exports = {

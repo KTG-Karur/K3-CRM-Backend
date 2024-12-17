@@ -57,29 +57,24 @@ async function createStaffTraining(postData) {
       raw: true,
       nest: false
     });
-
-    console.log("countResult")
-    console.log(countResult)
     const applicantCodeFormat = `K3-KRR-`
     const count = countResult.length > 0 ? parseInt(countResult[0].staff_trainingCode.split("-").pop()) : `00000`
     postData.staffTrainingCode = await generateSerialNumber(applicantCodeFormat, count)
 
     const excuteMethod = _.mapKeys(postData, (value, key) => _.snakeCase(key))
 
-    console.log("excuteMethod")
-    console.log(excuteMethod)
-    const existingStaffTraining = await sequelize.models.staff_training.findOne({
-      where: {
-        staff_id: excuteMethod.staff_id, staff_training_date: sequelize.where(
-          sequelize.fn('DATE', sequelize.col('staff_training_date')),
-          excuteMethod.staff_training_date
-        )
+    if (excuteMethod?.staff_training_date || false && excuteMethod?.staff_id || false) {
+      const existingStaffTraining = await sequelize.models.staff_training.findOne({
+        where: {
+          staff_id: excuteMethod.staff_id, staff_training_date: sequelize.where(
+            sequelize.fn('DATE', sequelize.col('staff_training_date')),
+            excuteMethod.staff_training_date
+          )
+        }
+      });
+      if (existingStaffTraining) {
+        throw new Error(messages.DUPLICATE_ENTRY);
       }
-    });
-    console.log("existingStaffTraining")
-    console.log(existingStaffTraining)
-    if (existingStaffTraining) {
-      throw new Error(messages.DUPLICATE_ENTRY);
     }
 
     const staffTrainingResult = await sequelize.models.staff_training.create(excuteMethod);
@@ -88,8 +83,6 @@ async function createStaffTraining(postData) {
     }
     return await getStaffTraining(req);
   } catch (error) {
-    console.log("error")
-    console.log(error)
     throw new Error(error?.message ? error.message : error.errors[0].message ? error.errors[0].message : messages.OPERATION_ERROR);
   }
 }
@@ -97,11 +90,14 @@ async function createStaffTraining(postData) {
 async function updateStaffTraining(staffTrainingId, putData) {
   try {
     const excuteMethod = _.mapKeys(putData, (value, key) => _.snakeCase(key))
-    const duplicateStaffTraining = await sequelize.models.staff_training.findOne({
-      where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND staff_training_date = '${excuteMethod.staff_training_date}' AND staff_training_id != '${excuteMethod.staff_training_id}'`)
-    });
-    if (duplicateStaffTraining) {
-      throw new Error(messages.DUPLICATE_ENTRY);
+
+    if (excuteMethod?.staff_training_date || false && excuteMethod?.staff_id || false) {
+      const duplicateStaffTraining = await sequelize.models.staff_training.findOne({
+        where: sequelize.literal(`staff_id = '${excuteMethod.staff_id}' AND staff_training_date = '${excuteMethod.staff_training_date}' AND staff_training_id != '${staffTrainingId}'`)
+      });
+      if (duplicateStaffTraining) {
+        throw new Error(messages.DUPLICATE_ENTRY);
+      }
     }
     const staff_trainingResult = await sequelize.models.staff_training.update(excuteMethod, { where: { staff_training_id: staffTrainingId } });
     const req = {
